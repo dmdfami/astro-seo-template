@@ -1,0 +1,104 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  before: string;
+  after: string;
+  position?: number;
+}
+
+const { before, after, position = 50 } = Astro.props;
+const id = `before-after-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class="before-after-container relative overflow-hidden rounded-lg" data-id={id}>
+  <div class="relative aspect-video">
+    <Image
+      src={after}
+      alt="After"
+      width={800}
+      height={450}
+      class="w-full h-full object-cover"
+    />
+    <div
+      class="before-image-wrapper absolute inset-0 overflow-hidden"
+      style={`clip-path: inset(0 ${100 - position}% 0 0)`}
+    >
+      <Image
+        src={before}
+        alt="Before"
+        width={800}
+        height={450}
+        class="w-full h-full object-cover"
+      />
+    </div>
+    <div
+      class="slider-handle absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize"
+      style={`left: ${position}%`}
+    >
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center">
+        <svg class="w-6 h-6 text-neutral-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-between mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+    <span>Before</span>
+    <span>After</span>
+  </div>
+</div>
+
+<script is:inline>
+  function initBeforeAfter() {
+    document.querySelectorAll('.before-after-container').forEach((container) => {
+      const wrapper = container.querySelector('.before-image-wrapper');
+      const handle = container.querySelector('.slider-handle');
+      let isDragging = false;
+
+      const updatePosition = (x) => {
+        const rect = container.getBoundingClientRect();
+        const position = ((x - rect.left) / rect.width) * 100;
+        const clampedPosition = Math.max(0, Math.min(100, position));
+
+        wrapper.style.clipPath = `inset(0 ${100 - clampedPosition}% 0 0)`;
+        handle.style.left = `${clampedPosition}%`;
+      };
+
+      const onMouseMove = (e) => {
+        if (isDragging) {
+          updatePosition(e.clientX);
+        }
+      };
+
+      const onMouseUp = () => {
+        isDragging = false;
+      };
+
+      handle.addEventListener('mousedown', () => {
+        isDragging = true;
+      });
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+
+      handle.addEventListener('keydown', (e) => {
+        const rect = container.getBoundingClientRect();
+        const currentLeft = parseFloat(handle.style.left);
+
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          updatePosition(rect.left + (currentLeft - 1) * rect.width / 100);
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          updatePosition(rect.left + (currentLeft + 1) * rect.width / 100);
+        }
+      });
+
+      handle.setAttribute('tabindex', '0');
+    });
+  }
+
+  initBeforeAfter();
+  document.addEventListener('astro:page-load', initBeforeAfter);
+</script>

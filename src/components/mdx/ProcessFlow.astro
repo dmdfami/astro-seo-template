@@ -1,0 +1,85 @@
+---
+import { cn } from '@lib/utils';
+
+interface ProcessStep {
+  number: number;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  steps: ProcessStep[];
+  orientation?: 'horizontal' | 'vertical';
+  class?: string;
+}
+
+const { steps, orientation = 'horizontal', class: className } = Astro.props;
+---
+
+<div class={cn(
+  'process-flow',
+  orientation === 'horizontal' ? 'flex flex-col md:flex-row gap-4 items-start' : 'flex flex-col gap-8',
+  className
+)}>
+  {steps.map((step, index) => (
+    <div class={cn(
+      'process-step flex-1',
+      orientation === 'horizontal' ? 'text-center' : 'flex gap-6'
+    )}>
+      <div class={cn(
+        'process-number',
+        orientation === 'horizontal' ? 'mx-auto mb-4' : 'flex-shrink-0'
+      )}>
+        <div class="w-16 h-16 rounded-full bg-primary-600 dark:bg-primary-500 text-white flex items-center justify-center text-2xl font-bold">
+          {step.number}
+        </div>
+      </div>
+      <div class="flex-1">
+        <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">
+          {step.title}
+        </h3>
+        <p class="text-neutral-600 dark:text-neutral-400">
+          {step.description}
+        </p>
+      </div>
+      {index < steps.length - 1 && (
+        <div class={cn(
+          'process-arrow',
+          orientation === 'horizontal'
+            ? 'hidden md:block text-4xl text-primary-600 dark:text-primary-400 mx-4 mt-8'
+            : 'ml-8 w-0.5 h-8 bg-primary-600 dark:bg-primary-400'
+        )}>
+          {orientation === 'horizontal' ? '→' : ''}
+        </div>
+      )}
+    </div>
+  ))}
+</div>
+
+<script is:inline>
+  function initProcessFlow() {
+    const steps = document.querySelectorAll('.process-step');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting && !entry.target.dataset.animated) {
+          setTimeout(() => {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }, index * 150);
+          entry.target.dataset.animated = 'true';
+        }
+      });
+    }, { threshold: 0.2 });
+
+    steps.forEach((step) => {
+      step.style.opacity = '0';
+      step.style.transform = 'translateY(20px)';
+      step.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(step);
+    });
+  }
+
+  initProcessFlow();
+  document.addEventListener('astro:page-load', initProcessFlow);
+</script>

@@ -1,0 +1,103 @@
+---
+import { cn } from '@lib/utils';
+import Button from '../ui/Button.astro';
+
+interface Props {
+  trigger: string;
+  side?: 'left' | 'right';
+  id?: string;
+}
+
+const { trigger, side = 'right', id = `drawer-${Math.random().toString(36).substr(2, 9)}` } = Astro.props;
+
+const positions = {
+  left: 'left-0 -translate-x-full',
+  right: 'right-0 translate-x-full',
+};
+---
+
+<div>
+  <Button data-drawer-trigger={id} variant="primary">
+    {trigger}
+  </Button>
+
+  <div
+    id={id}
+    class="drawer fixed inset-0 z-50 hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+  >
+    <div class="drawer-backdrop absolute inset-0 bg-black bg-opacity-50" data-drawer-close={id}></div>
+    <div
+      class={cn(
+        'drawer-panel absolute top-0 h-full w-full max-w-md bg-white dark:bg-neutral-950 shadow-2xl transition-transform duration-300',
+        positions[side]
+      )}
+    >
+      <div class="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-neutral-800">
+        <h2 class="text-xl font-bold text-neutral-900 dark:text-white">Menu</h2>
+        <button
+          type="button"
+          class="drawer-close text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
+          data-drawer-close={id}
+          aria-label="Close drawer"
+        >
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="p-6 overflow-y-auto h-[calc(100%-80px)]">
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  function initDrawers() {
+    document.querySelectorAll('[data-drawer-trigger]').forEach((trigger) => {
+      const drawerId = trigger.dataset.drawerTrigger;
+      const drawer = document.getElementById(drawerId);
+      if (!drawer) return;
+
+      const panel = drawer.querySelector('.drawer-panel');
+
+      trigger.addEventListener('click', () => {
+        drawer.classList.remove('hidden');
+        drawer.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+
+        setTimeout(() => {
+          panel.classList.remove('-translate-x-full', 'translate-x-full');
+        }, 10);
+      });
+    });
+
+    document.querySelectorAll('[data-drawer-close]').forEach((closeBtn) => {
+      const drawerId = closeBtn.dataset.drawerClose;
+      const drawer = document.getElementById(drawerId);
+      if (!drawer) return;
+
+      const panel = drawer.querySelector('.drawer-panel');
+
+      closeBtn.addEventListener('click', () => {
+        if (panel.classList.contains('left-0')) {
+          panel.classList.add('-translate-x-full');
+        } else {
+          panel.classList.add('translate-x-full');
+        }
+
+        setTimeout(() => {
+          drawer.classList.add('hidden');
+          drawer.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }, 300);
+      });
+    });
+  }
+
+  initDrawers();
+  document.addEventListener('astro:page-load', initDrawers);
+</script>

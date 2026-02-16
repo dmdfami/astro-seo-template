@@ -1,0 +1,68 @@
+---
+import { cn } from '@lib/utils';
+
+interface Props {
+  content: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  class?: string;
+}
+
+const { content, position = 'top', class: className } = Astro.props;
+
+const positions = {
+  top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
+  bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
+  left: 'right-full top-1/2 -translate-y-1/2 mr-2',
+  right: 'left-full top-1/2 -translate-y-1/2 ml-2',
+};
+
+const arrows = {
+  top: 'top-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-b-transparent',
+  bottom: 'bottom-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent',
+  left: 'left-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent',
+  right: 'right-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent',
+};
+---
+
+<span class={cn('tooltip-wrapper relative inline-block', className)}>
+  <span class="tooltip-trigger cursor-help">
+    <slot />
+  </span>
+  <span
+    class={cn(
+      'tooltip-content absolute z-50 px-3 py-2 text-sm text-white bg-neutral-900 dark:bg-neutral-700 rounded-lg whitespace-nowrap opacity-0 invisible transition-all duration-200',
+      positions[position]
+    )}
+    role="tooltip"
+  >
+    {content}
+    <span class={cn('absolute w-2 h-2 bg-neutral-900 dark:bg-neutral-700 transform rotate-45', arrows[position])}></span>
+  </span>
+</span>
+
+<script is:inline>
+  function initTooltips() {
+    document.querySelectorAll('.tooltip-wrapper').forEach((wrapper) => {
+      const trigger = wrapper.querySelector('.tooltip-trigger');
+      const tooltip = wrapper.querySelector('.tooltip-content');
+
+      const show = () => {
+        tooltip.classList.remove('opacity-0', 'invisible');
+        tooltip.classList.add('opacity-100', 'visible');
+      };
+
+      const hide = () => {
+        tooltip.classList.add('opacity-0', 'invisible');
+        tooltip.classList.remove('opacity-100', 'visible');
+      };
+
+      trigger.addEventListener('mouseenter', show);
+      trigger.addEventListener('mouseleave', hide);
+      trigger.addEventListener('focus', show);
+      trigger.addEventListener('blur', hide);
+    });
+  }
+
+  initTooltips();
+  document.addEventListener('astro:page-load', initTooltips);
+</script>

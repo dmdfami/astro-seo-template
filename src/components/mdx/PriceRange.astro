@@ -1,0 +1,40 @@
+---
+import { cn } from '@lib/utils';
+
+interface Props {
+  min: number;
+  max: number;
+  currency?: string;
+  unit?: string;
+  class?: string;
+}
+
+const {
+  min,
+  max,
+  currency = '$',
+  unit = '',
+  class: className
+} = Astro.props;
+
+const formatPrice = (price: number) => {
+  return price.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+};
+---
+
+<div class={cn('price-range inline-flex items-baseline gap-2', className)}>
+  <span class="text-3xl font-bold text-neutral-900 dark:text-white">
+    {currency}{formatPrice(min)}
+  </span>
+  <span class="text-xl text-neutral-600 dark:text-neutral-400">
+    - {currency}{formatPrice(max)}
+  </span>
+  {unit && (
+    <span class="text-sm text-neutral-600 dark:text-neutral-400">
+      {unit}
+    </span>
+  )}
+</div>

@@ -1,0 +1,79 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings = [] } = Astro.props;
+---
+
+<div class="toc-container lg:sticky lg:top-24 border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 bg-white dark:bg-neutral-950">
+  <div class="flex items-center justify-between mb-4 lg:mb-0">
+    <h2 class="text-lg font-bold text-neutral-900 dark:text-white">
+      Table of Contents
+    </h2>
+    <button
+      type="button"
+      class="toc-toggle lg:hidden text-neutral-600 dark:text-neutral-400"
+      aria-label="Toggle table of contents"
+    >
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+  </div>
+  <nav class="toc-nav hidden lg:block" aria-label="Table of contents">
+    <ul class="space-y-2">
+      {headings.map((heading) => (
+        <li style={`margin-left: ${(heading.depth - 2) * 1}rem`}>
+          <a
+            href={`#${heading.slug}`}
+            class="toc-link block text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-1"
+            data-slug={heading.slug}
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</div>
+
+<script is:inline>
+  function initTOC() {
+    const toggle = document.querySelector('.toc-toggle');
+    const nav = document.querySelector('.toc-nav');
+    const links = document.querySelectorAll('.toc-link');
+
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => {
+        nav.classList.toggle('hidden');
+      });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const id = entry.target.getAttribute('id');
+        const link = document.querySelector(`.toc-link[data-slug="${id}"]`);
+        if (link) {
+          if (entry.isIntersecting) {
+            links.forEach((l) => l.classList.remove('text-primary-600', 'dark:text-primary-400', 'font-medium'));
+            link.classList.add('text-primary-600', 'dark:text-primary-400', 'font-medium');
+          }
+        }
+      });
+    }, { rootMargin: '-100px 0px -66%' });
+
+    document.querySelectorAll('h2[id], h3[id], h4[id]').forEach((heading) => {
+      observer.observe(heading);
+    });
+  }
+
+  initTOC();
+  document.addEventListener('astro:page-load', initTOC);
+</script>

@@ -1,0 +1,40 @@
+---
+import { cn } from '@lib/utils';
+import { Image } from 'astro:assets';
+
+interface Badge {
+  name: string;
+  image: string;
+  year?: string;
+}
+
+interface Props {
+  badges: Badge[];
+  class?: string;
+}
+
+const { badges, class: className } = Astro.props;
+---
+
+<div class={cn('grid grid-cols-2 md:grid-cols-4 gap-6', className)}>
+  {badges.map((badge) => (
+    <div class="cert-badge relative group">
+      <div class="border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 hover:shadow-lg transition-all duration-300 bg-white dark:bg-neutral-950">
+        <Image
+          src={badge.image}
+          alt={badge.name}
+          width={120}
+          height={120}
+          class="w-full h-auto"
+        />
+      </div>
+      <div class="cert-tooltip absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-neutral-900 dark:bg-neutral-700 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap">
+        <div class="font-medium">{badge.name}</div>
+        {badge.year && (
+          <div class="text-xs opacity-75">{badge.year}</div>
+        )}
+        <div class="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-neutral-900 dark:bg-neutral-700 transform rotate-45 -mt-1"></div>
+      </div>
+    </div>
+  ))}
+</div>

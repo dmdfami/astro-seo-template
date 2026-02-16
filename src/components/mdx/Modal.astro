@@ -1,0 +1,88 @@
+---
+import Button from '../ui/Button.astro';
+
+interface Props {
+  trigger: string;
+  id?: string;
+}
+
+const { trigger, id = `modal-${Math.random().toString(36).substr(2, 9)}` } = Astro.props;
+---
+
+<div>
+  <Button data-modal-trigger={id} variant="primary">
+    {trigger}
+  </Button>
+
+  <div
+    id={id}
+    class="modal fixed inset-0 z-50 hidden items-center justify-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+  >
+    <div class="modal-backdrop absolute inset-0 bg-black bg-opacity-50" data-modal-close={id}></div>
+    <div class="modal-content relative bg-white dark:bg-neutral-950 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <button
+        type="button"
+        class="modal-close absolute top-4 right-4 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
+        data-modal-close={id}
+        aria-label="Close modal"
+      >
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="p-8">
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  function initModals() {
+    const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+    document.querySelectorAll('[data-modal-trigger]').forEach((trigger) => {
+      const modalId = trigger.dataset.modalTrigger;
+      const modal = document.getElementById(modalId);
+      if (!modal) return;
+
+      trigger.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+
+        const focusable = modal.querySelectorAll(focusableElements);
+        if (focusable.length) focusable[0].focus();
+      });
+    });
+
+    document.querySelectorAll('[data-modal-close]').forEach((closeBtn) => {
+      const modalId = closeBtn.dataset.modalClose;
+      const modal = document.getElementById(modalId);
+      if (!modal) return;
+
+      closeBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      });
+    });
+
+    document.querySelectorAll('.modal').forEach((modal) => {
+      modal.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const closeBtn = modal.querySelector('[data-modal-close]');
+          if (closeBtn) closeBtn.click();
+        }
+      });
+    });
+  }
+
+  initModals();
+  document.addEventListener('astro:page-load', initModals);
+</script>

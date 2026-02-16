@@ -1,0 +1,68 @@
+---
+import { cn } from '@lib/utils';
+
+interface Props {
+  target: number;
+  duration?: number;
+  suffix?: string;
+  prefix?: string;
+  class?: string;
+}
+
+const {
+  target,
+  duration = 2000,
+  suffix = '',
+  prefix = '',
+  class: className = ''
+} = Astro.props;
+---
+
+<div
+  class={cn('counter text-4xl font-bold text-primary-600 dark:text-primary-400', className)}
+  data-target={target}
+  data-duration={duration}
+  data-suffix={suffix}
+  data-prefix={prefix}
+>
+  <span class="counter-value">{prefix}0{suffix}</span>
+</div>
+
+<script is:inline>
+  function initCounters() {
+    const counters = document.querySelectorAll('.counter');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.counted) {
+          const counter = entry.target;
+          const target = parseInt(counter.dataset.target);
+          const duration = parseInt(counter.dataset.duration);
+          const suffix = counter.dataset.suffix || '';
+          const prefix = counter.dataset.prefix || '';
+          const valueEl = counter.querySelector('.counter-value');
+
+          let start = 0;
+          const increment = target / (duration / 16);
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= target) {
+              valueEl.textContent = prefix + target.toLocaleString() + suffix;
+              clearInterval(timer);
+            } else {
+              valueEl.textContent = prefix + Math.floor(start).toLocaleString() + suffix;
+            }
+          }, 16);
+
+          counter.dataset.counted = 'true';
+          observer.unobserve(counter);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => observer.observe(counter));
+  }
+
+  initCounters();
+  document.addEventListener('astro:page-load', initCounters);
+</script>

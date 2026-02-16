@@ -1,0 +1,53 @@
+---
+import { formatDate } from '@lib/utils';
+import StarRating from './StarRating.astro';
+import Badge from '../ui/Badge.astro';
+
+interface Props {
+  rating: number;
+  title: string;
+  review: string;
+  author: string;
+  date: Date | string;
+  verified?: boolean;
+  class?: string;
+}
+
+const {
+  rating,
+  title,
+  review,
+  author,
+  date,
+  verified = false,
+  class: className
+} = Astro.props;
+
+const formattedDate = typeof date === 'string' ? date : formatDate(date);
+---
+
+<div class={`bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 ${className || ''}`}>
+  <div class="flex items-start justify-between mb-4">
+    <StarRating rating={rating} />
+    {verified && (
+      <Badge variant="success">Verified</Badge>
+    )}
+  </div>
+
+  <h3 class="text-lg font-bold text-neutral-900 dark:text-white mb-2">
+    {title}
+  </h3>
+
+  <p class="text-neutral-600 dark:text-neutral-400 mb-4">
+    {review}
+  </p>
+
+  <div class="flex items-center justify-between text-sm">
+    <span class="font-medium text-neutral-900 dark:text-white">
+      {author}
+    </span>
+    <span class="text-neutral-600 dark:text-neutral-400">
+      {formattedDate}
+    </span>
+  </div>
+</div>

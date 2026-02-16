@@ -1,0 +1,97 @@
+---
+interface Tab {
+  label: string;
+  content: string;
+}
+
+interface Props {
+  tabs?: Tab[];
+}
+
+const { tabs = [] } = Astro.props;
+const hasSlot = Astro.slots.has('default');
+const tabsId = `tabs-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class="tabs-container" data-tabs-id={tabsId}>
+  <div class="border-b border-neutral-200 dark:border-neutral-800 mb-6">
+    <nav class="flex gap-4 overflow-x-auto" role="tablist">
+      {tabs.map((tab, index) => (
+        <button
+          type="button"
+          role="tab"
+          aria-selected={index === 0 ? 'true' : 'false'}
+          aria-controls={`${tabsId}-panel-${index}`}
+          id={`${tabsId}-tab-${index}`}
+          class="tab-button px-4 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border-b-2 border-transparent transition-colors whitespace-nowrap"
+          data-index={index}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </nav>
+  </div>
+
+  <div class="tabs-content">
+    {hasSlot ? (
+      <slot />
+    ) : (
+      tabs.map((tab, index) => (
+        <div
+          role="tabpanel"
+          id={`${tabsId}-panel-${index}`}
+          aria-labelledby={`${tabsId}-tab-${index}`}
+          class="tab-panel"
+          hidden={index !== 0}
+        >
+          <div class="prose dark:prose-invert max-w-none">
+            {tab.content}
+          </div>
+        </div>
+      ))
+    )}
+  </div>
+</div>
+
+<script is:inline>
+  function initTabs() {
+    document.querySelectorAll('[data-tabs-id]').forEach((container) => {
+      const buttons = container.querySelectorAll('.tab-button');
+      const panels = container.querySelectorAll('.tab-panel');
+
+      buttons.forEach((button, index) => {
+        button.addEventListener('click', () => {
+          buttons.forEach((btn) => {
+            btn.setAttribute('aria-selected', 'false');
+            btn.classList.remove('border-primary-600', 'dark:border-primary-400', 'text-primary-600', 'dark:text-primary-400');
+            btn.classList.add('border-transparent', 'text-neutral-600', 'dark:text-neutral-400');
+          });
+
+          panels.forEach((panel) => panel.hidden = true);
+
+          button.setAttribute('aria-selected', 'true');
+          button.classList.add('border-primary-600', 'dark:border-primary-400', 'text-primary-600', 'dark:text-primary-400');
+          button.classList.remove('border-transparent', 'text-neutral-600', 'dark:text-neutral-400');
+          panels[index].hidden = false;
+        });
+
+        button.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            const next = buttons[index + 1] || buttons[0];
+            next.click();
+            next.focus();
+          } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            const prev = buttons[index - 1] || buttons[buttons.length - 1];
+            prev.click();
+            prev.focus();
+          }
+        });
+      });
+    });
+  }
+
+  initTabs();
+  document.addEventListener('astro:page-load', initTabs);
+</script>

@@ -1,0 +1,20 @@
+---
+import { cn } from '@lib/utils';
+
+interface Props {
+  variant?: 'solid' | 'dashed' | 'gradient';
+  class?: string;
+}
+
+const { variant = 'solid', class: className } = Astro.props;
+
+const variants: Record<string, string> = {
+  solid: 'border-t border-neutral-200 dark:border-neutral-800',
+  dashed: 'border-t border-dashed border-neutral-300 dark:border-neutral-700',
+  gradient: 'h-px bg-gradient-to-r from-transparent via-primary-500 to-transparent',
+};
+
+const classes = cn(variants[variant], className);
+---
+
+<hr class={classes} />

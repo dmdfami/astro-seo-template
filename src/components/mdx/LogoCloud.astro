@@ -1,0 +1,48 @@
+---
+import { cn } from '@lib/utils';
+import { Image } from 'astro:assets';
+
+interface Logo {
+  src: string;
+  alt: string;
+  href?: string;
+}
+
+interface Props {
+  logos: Logo[];
+  cols?: 3 | 4 | 5 | 6;
+}
+
+const { logos, cols = 4 } = Astro.props;
+
+const gridCols = {
+  3: 'grid-cols-2 md:grid-cols-3',
+  4: 'grid-cols-2 md:grid-cols-4',
+  5: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-5',
+  6: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-6',
+};
+---
+
+<div class={cn('grid gap-8 items-center', gridCols[cols])}>
+  {logos.map((logo) => {
+    const LogoImage = (
+      <Image
+        src={logo.src}
+        alt={logo.alt}
+        width={150}
+        height={60}
+        class="max-h-12 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+      />
+    );
+
+    return logo.href ? (
+      <a href={logo.href} class="flex items-center justify-center" target="_blank" rel="noopener noreferrer">
+        {LogoImage}
+      </a>
+    ) : (
+      <div class="flex items-center justify-center">
+        {LogoImage}
+      </div>
+    );
+  })}
+</div>

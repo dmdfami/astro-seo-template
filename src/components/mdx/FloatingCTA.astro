@@ -1,0 +1,65 @@
+---
+import { cn } from '@lib/utils';
+import Button from '../ui/Button.astro';
+
+interface Props {
+  text: string;
+  href: string;
+  position?: 'bottom-right' | 'bottom-left' | 'bottom-center';
+  showAfterScroll?: number;
+}
+
+const {
+  text,
+  href,
+  position = 'bottom-right',
+  showAfterScroll = 300
+} = Astro.props;
+
+const positions = {
+  'bottom-right': 'bottom-6 right-6',
+  'bottom-left': 'bottom-6 left-6',
+  'bottom-center': 'bottom-6 left-1/2 -translate-x-1/2',
+};
+---
+
+<div
+  id="floating-cta"
+  class={cn(
+    'fixed z-40 transform translate-y-24 opacity-0 transition-all duration-300',
+    positions[position]
+  )}
+  data-show-after={showAfterScroll}
+>
+  <Button href={href} variant="primary" size="lg" class="shadow-2xl">
+    {text}
+  </Button>
+</div>
+
+<script is:inline>
+  function initFloatingCTA() {
+    const cta = document.getElementById('floating-cta');
+    if (!cta) return;
+
+    const showAfter = parseInt(cta.dataset.showAfter);
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      const scrollingDown = currentScrollY > lastScrollY;
+
+      if (currentScrollY > showAfter && !scrollingDown) {
+        cta.classList.remove('translate-y-24', 'opacity-0');
+        cta.classList.add('translate-y-0', 'opacity-100');
+      } else {
+        cta.classList.add('translate-y-24', 'opacity-0');
+        cta.classList.remove('translate-y-0', 'opacity-100');
+      }
+
+      lastScrollY = currentScrollY;
+    });
+  }
+
+  initFloatingCTA();
+  document.addEventListener('astro:page-load', initFloatingCTA);
+</script>

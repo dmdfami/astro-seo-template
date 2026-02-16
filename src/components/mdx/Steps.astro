@@ -1,0 +1,37 @@
+---
+interface StepItem {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  items?: StepItem[];
+}
+
+const { items = [] } = Astro.props;
+const hasSlot = Astro.slots.has('default');
+---
+
+<div class="space-y-8">
+  {hasSlot ? (
+    <slot />
+  ) : (
+    items.map((item, index) => (
+      <div class="flex gap-6">
+        <div class="flex-shrink-0">
+          <div class="w-12 h-12 rounded-full bg-primary-600 dark:bg-primary-500 text-white flex items-center justify-center text-xl font-bold">
+            {index + 1}
+          </div>
+        </div>
+        <div class="flex-1 pt-2">
+          <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">
+            {item.title}
+          </h3>
+          <p class="text-neutral-600 dark:text-neutral-400">
+            {item.description}
+          </p>
+        </div>
+      </div>
+    ))
+  )}
+</div>

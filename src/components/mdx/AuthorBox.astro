@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+import Icon from '../ui/Icon.astro';
+
+interface SocialLink {
+  platform: 'twitter' | 'linkedin' | 'github' | 'email';
+  url: string;
+}
+
+interface Props {
+  name: string;
+  bio: string;
+  avatar?: string;
+  social?: SocialLink[];
+}
+
+const { name, bio, avatar, social = [] } = Astro.props;
+
+const iconMap = {
+  twitter: 'external-link',
+  linkedin: 'external-link',
+  github: 'external-link',
+  email: 'external-link',
+};
+---
+
+<div class="border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 bg-neutral-50 dark:bg-neutral-900">
+  <div class="flex items-start gap-4">
+    {avatar && (
+      <div class="flex-shrink-0">
+        <Image
+          src={avatar}
+          alt={name}
+          width={64}
+          height={64}
+          class="rounded-full"
+        />
+      </div>
+    )}
+    {!avatar && (
+      <div class="flex-shrink-0 w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
+        <span class="text-2xl font-bold text-primary-600 dark:text-primary-400">
+          {name.charAt(0).toUpperCase()}
+        </span>
+      </div>
+    )}
+    <div class="flex-1">
+      <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">
+        {name}
+      </h3>
+      <p class="text-neutral-600 dark:text-neutral-400 mb-3">
+        {bio}
+      </p>
+      {social.length > 0 && (
+        <div class="flex gap-3">
+          {social.map((link) => (
+            <a
+              href={link.url}
+              class="text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${name} on ${link.platform}`}
+            >
+              <Icon name={iconMap[link.platform]} class="w-5 h-5" />
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,73 @@
+---
+interface FAQItem {
+  q: string;
+  a: string;
+}
+
+interface Props {
+  items?: FAQItem[];
+}
+
+const { items = [] } = Astro.props;
+const hasSlot = Astro.slots.has('default');
+---
+
+<div class="space-y-4" itemscope itemtype="https://schema.org/FAQPage">
+  {hasSlot ? (
+    <slot />
+  ) : (
+    items.map((item) => (
+      <div
+        class="border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden"
+        itemscope
+        itemprop="mainEntity"
+        itemtype="https://schema.org/Question"
+      >
+        <button
+          type="button"
+          class="faq-trigger w-full px-6 py-4 text-left font-medium text-neutral-900 dark:text-white hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors flex items-center justify-between"
+          aria-expanded="false"
+        >
+          <span itemprop="name">{item.q}</span>
+          <svg
+            class="faq-icon w-5 h-5 transition-transform text-neutral-600 dark:text-neutral-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div
+          class="faq-panel overflow-hidden transition-all duration-300 max-h-0"
+          itemscope
+          itemprop="acceptedAnswer"
+          itemtype="https://schema.org/Answer"
+        >
+          <div class="px-6 py-4 text-neutral-600 dark:text-neutral-400" itemprop="text">
+            {item.a}
+          </div>
+        </div>
+      </div>
+    ))
+  )}
+</div>
+
+<script is:inline>
+  function initFAQ() {
+    document.querySelectorAll('.faq-trigger').forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        const panel = trigger.nextElementSibling;
+        const icon = trigger.querySelector('.faq-icon');
+        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+
+        trigger.setAttribute('aria-expanded', !isExpanded);
+        panel.style.maxHeight = isExpanded ? '0' : `${panel.scrollHeight}px`;
+        icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)';
+      });
+    });
+  }
+
+  initFAQ();
+  document.addEventListener('astro:page-load', initFAQ);
+</script>

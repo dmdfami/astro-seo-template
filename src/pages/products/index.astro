@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/layout/Header.astro';
+import Footer from '@components/layout/Footer.astro';
+import Container from '@components/sections/Container.astro';
+import Section from '@components/sections/Section.astro';
+
+const products = await getCollection('products', ({ data }) => !data.draft);
+---
+
+<BaseLayout title="Products" description="Browse our product catalog">
+  <Header />
+
+  <Section padding="xl">
+    <Container>
+      <div class="text-center mb-12">
+        <h1 class="text-4xl lg:text-5xl font-bold font-heading mb-4">Products</h1>
+        <p class="text-xl text-neutral-600 dark:text-neutral-400">Browse our product catalog</p>
+      </div>
+
+      {products.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {products.map(product => (
+            <a href={`/products/${product.id}`} class="group block rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden hover:shadow-lg transition-shadow">
+              {product.data.image && (
+                <img src={product.data.image.src} alt={product.data.image.alt} class="w-full h-48 object-cover" loading="lazy" />
+              )}
+              <div class="p-6">
+                <h2 class="text-xl font-bold mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                  {product.data.title}
+                </h2>
+                <p class="text-neutral-600 dark:text-neutral-400 text-sm line-clamp-2">{product.data.description}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="text-center text-neutral-500">No products yet.</p>
+      )}
+    </Container>
+  </Section>
+
+  <Footer />
+</BaseLayout>

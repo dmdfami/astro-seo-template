@@ -1,0 +1,38 @@
+---
+import Button from '../ui/Button.astro';
+
+interface Props {
+  primary?: { text: string; url: string };
+  secondary?: { text: string; url: string };
+  note?: string;
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'outline';
+}
+
+const { primary, secondary, note, href, variant = 'primary' } = Astro.props;
+const hasSlot = Astro.slots.has('default');
+---
+
+{hasSlot ? (
+  <Button href={href} variant={variant} size="lg">
+    <slot />
+  </Button>
+) : (
+  <div class="flex flex-wrap gap-4 items-center">
+    {primary && (
+      <Button href={primary.url} variant="primary" size="lg">
+        {primary.text}
+      </Button>
+    )}
+    {secondary && (
+      <Button href={secondary.url} variant="outline" size="lg">
+        {secondary.text}
+      </Button>
+    )}
+    {note && (
+      <p class="text-sm text-neutral-600 dark:text-neutral-400">
+        {note}
+      </p>
+    )}
+  </div>
+)}

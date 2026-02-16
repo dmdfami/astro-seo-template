@@ -1,0 +1,22 @@
+---
+import siteConfig from '../../../site-config.json';
+
+const { main } = siteConfig.navigation;
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="hidden md:flex items-center gap-8">
+  {main.map((link: { label: string; href: string }) => (
+    <a
+      href={link.href}
+      class:list={[
+        'text-sm font-medium transition-colors',
+        currentPath === link.href
+          ? 'text-primary-600 dark:text-primary-400'
+          : 'text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400'
+      ]}
+    >
+      {link.label}
+    </a>
+  ))}
+</nav>

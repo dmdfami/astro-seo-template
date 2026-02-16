@@ -1,0 +1,77 @@
+---
+import { cn } from '@lib/utils';
+import { Image } from 'astro:assets';
+
+interface Client {
+  name: string;
+  logo: string;
+}
+
+interface Props {
+  clients: Client[];
+  cols?: 4 | 5 | 6;
+  marquee?: boolean;
+  class?: string;
+}
+
+const { clients, cols = 5, marquee = false, class: className } = Astro.props;
+
+const gridCols = {
+  4: 'grid-cols-2 md:grid-cols-4',
+  5: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-5',
+  6: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-6',
+};
+---
+
+{marquee ? (
+  <div class={cn('client-marquee overflow-hidden', className)}>
+    <div class="marquee-content flex gap-12 items-center">
+      {[...clients, ...clients].map((client) => (
+        <div class="flex-shrink-0">
+          <Image
+            src={client.logo}
+            alt={client.name}
+            width={120}
+            height={60}
+            class="h-12 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+) : (
+  <div class={cn('grid gap-8 items-center', gridCols[cols], className)}>
+    {clients.map((client) => (
+      <div class="flex items-center justify-center">
+        <Image
+          src={client.logo}
+          alt={client.name}
+          width={120}
+          height={60}
+          class="h-12 w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+        />
+      </div>
+    ))}
+  </div>
+)}
+
+{marquee && (
+  <style>
+    .marquee-content {
+      animation: marquee 30s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .client-marquee:hover .marquee-content {
+      animation-play-state: paused;
+    }
+  </style>
+)}

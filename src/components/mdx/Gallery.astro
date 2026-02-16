@@ -1,0 +1,141 @@
+---
+import { cn } from '@lib/utils';
+import { Image } from 'astro:assets';
+
+interface GalleryImage {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
+interface Props {
+  images: GalleryImage[];
+  layout?: 'grid' | 'masonry';
+  class?: string;
+}
+
+const { images, layout = 'grid', class: className } = Astro.props;
+---
+
+<div
+  class={cn(
+    layout === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 gap-4' : 'columns-2 md:columns-3 gap-4 space-y-4',
+    className
+  )}
+>
+  {images.map((img, index) => (
+    <figure
+      class={cn('gallery-item cursor-pointer overflow-hidden rounded-lg', layout === 'masonry' && 'break-inside-avoid')}
+      data-index={index}
+    >
+      <Image
+        src={img.src}
+        alt={img.alt}
+        width={400}
+        height={300}
+        class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+        loading="lazy"
+      />
+      {img.caption && (
+        <figcaption class="text-sm text-neutral-600 dark:text-neutral-400 mt-2 px-2">
+          {img.caption}
+        </figcaption>
+      )}
+    </figure>
+  ))}
+</div>
+
+<div id="gallery-lightbox" class="fixed inset-0 bg-black bg-opacity-95 z-50 hidden items-center justify-center p-4">
+  <button
+    type="button"
+    class="absolute top-4 right-4 text-white text-4xl hover:text-neutral-300 z-10"
+    id="gallery-close"
+    aria-label="Close gallery"
+  >
+    &times;
+  </button>
+  <button
+    type="button"
+    class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl hover:text-neutral-300"
+    id="gallery-prev"
+    aria-label="Previous image"
+  >
+    &#8249;
+  </button>
+  <button
+    type="button"
+    class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl hover:text-neutral-300"
+    id="gallery-next"
+    aria-label="Next image"
+  >
+    &#8250;
+  </button>
+  <img id="gallery-image" src="" alt="" class="max-w-full max-h-full rounded-lg" />
+</div>
+
+<script is:inline>
+  function initGallery() {
+    const items = document.querySelectorAll('.gallery-item');
+    const lightbox = document.getElementById('gallery-lightbox');
+    const lightboxImg = document.getElementById('gallery-image');
+    const closeBtn = document.getElementById('gallery-close');
+    const prevBtn = document.getElementById('gallery-prev');
+    const nextBtn = document.getElementById('gallery-next');
+
+    if (!lightbox || !lightboxImg) return;
+
+    let currentIndex = 0;
+    const images = Array.from(items).map(item => {
+      const img = item.querySelector('img');
+      return { src: img.src, alt: img.alt };
+    });
+
+    const showImage = (index) => {
+      currentIndex = index;
+      lightboxImg.src = images[index].src;
+      lightboxImg.alt = images[index].alt;
+    };
+
+    items.forEach((item, index) => {
+      item.addEventListener('click', () => {
+        showImage(index);
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    closeBtn?.addEventListener('click', () => {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.style.overflow = '';
+    });
+
+    prevBtn?.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      showImage(currentIndex);
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % images.length;
+      showImage(currentIndex);
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeBtn?.click();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('hidden')) {
+        if (e.key === 'Escape') closeBtn?.click();
+        if (e.key === 'ArrowLeft') prevBtn?.click();
+        if (e.key === 'ArrowRight') nextBtn?.click();
+      }
+    });
+  }
+
+  initGallery();
+  document.addEventListener('astro:page-load', initGallery);
+</script>

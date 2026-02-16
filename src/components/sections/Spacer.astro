@@ -1,0 +1,23 @@
+---
+import { cn } from '@lib/utils';
+
+interface Props {
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  class?: string;
+}
+
+const { size = 'md', class: className } = Astro.props;
+
+const sizes: Record<string, string> = {
+  xs: 'h-4',
+  sm: 'h-6',
+  md: 'h-8',
+  lg: 'h-12',
+  xl: 'h-16',
+  '2xl': 'h-24',
+};
+
+const classes = cn(sizes[size], className);
+---
+
+<div class={classes} aria-hidden="true"></div>

@@ -1,0 +1,106 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import siteConfig from '../../site-config.json';
+import schemaOrg from '../../schema-org.json';
+import OpenGraph from '@components/seo/OpenGraph.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article' | 'product';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  author?: string;
+  tags?: string[];
+}
+
+const {
+  title,
+  description,
+  image,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  author,
+  tags
+} = Astro.props;
+
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: schemaOrg.organization.name,
+  url: schemaOrg.organization.url,
+  logo: schemaOrg.organization.logo,
+  sameAs: schemaOrg.organization.sameAs,
+  contactPoint: schemaOrg.organization.contactPoint,
+};
+
+const siteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: schemaOrg.website.name,
+  url: schemaOrg.website.url,
+};
+---
+
+<!DOCTYPE html>
+<html lang={siteConfig.site.language || 'en'}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <ClientRouter />
+
+  <!-- OpenGraph + Meta Tags -->
+  <OpenGraph
+    title={title}
+    description={description}
+    image={image}
+    type={type}
+    publishedTime={publishedTime}
+    modifiedTime={modifiedTime}
+    author={author}
+    tags={tags}
+  />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Dark mode script (inline to prevent FOUC) -->
+  <script is:inline>
+    (function() {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
+  <!-- Re-apply dark mode after view transition -->
+  <script is:inline>
+    document.addEventListener('astro:after-swap', () => {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    });
+  </script>
+
+  <!-- Schema.org Tier 1: Organization + WebSite -->
+  <script type="application/ld+json" set:html={JSON.stringify(orgSchema).replace(/<\//g, '<\\/')} />
+  <script type="application/ld+json" set:html={JSON.stringify(siteSchema).replace(/<\//g, '<\\/')} />
+
+  <!-- Tier 2 schemas injected here -->
+  <slot name="schema" />
+
+  <slot name="head" />
+</head>
+<body>
+  <slot />
+</body>
+</html>

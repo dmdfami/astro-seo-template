@@ -1,0 +1,104 @@
+---
+import schemaOrg from '../../../schema-org.json';
+import siteConfig from '../../../site-config.json';
+
+interface Props {
+  contentType: 'blog' | 'product' | 'landing' | 'homepage' | 'generic';
+  frontmatter: Record<string, any>;
+  url: string;
+}
+
+const { contentType, frontmatter, url } = Astro.props;
+
+function buildSchemas() {
+  const schemas: object[] = [];
+  schemas.push(buildBreadcrumb(url));
+
+  switch (contentType) {
+    case 'blog':
+      schemas.push(buildArticleSchema(frontmatter, url));
+      break;
+    case 'product':
+      schemas.push(buildProductSchema(frontmatter, url));
+      break;
+  }
+
+  if (frontmatter.faq?.length) {
+    schemas.push(buildFAQSchema(frontmatter.faq));
+  }
+
+  return schemas;
+}
+
+function buildBreadcrumb(pageUrl: string) {
+  const parsed = new URL(pageUrl);
+  const pathParts = parsed.pathname.replace(/\/$/, '').split('/').filter(Boolean);
+  const siteUrl = siteConfig.site.url.replace(/\/$/, '');
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: pathParts.map((part, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: part.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+      item: `${siteUrl}/${pathParts.slice(0, i + 1).join('/')}/`
+    }))
+  };
+}
+
+function buildArticleSchema(fm: Record<string, any>, pageUrl: string) {
+  const author = (schemaOrg.authors as Record<string, any>)?.[fm.author] || schemaOrg.authors.default;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: fm.title,
+    description: fm.description,
+    image: fm.image?.src,
+    datePublished: fm.publishDate,
+    dateModified: fm.updatedDate || fm.publishDate,
+    author: { "@type": "Person", name: author.name, url: author.url },
+    publisher: {
+      "@type": "Organization",
+      name: schemaOrg.organization.name,
+      logo: { "@type": "ImageObject", url: schemaOrg.organization.logo }
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl }
+  };
+}
+
+function buildProductSchema(fm: Record<string, any>, _pageUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: fm.title,
+    description: fm.description,
+    image: fm.image?.src,
+    brand: { "@type": "Brand", name: schemaOrg.organization.name },
+    ...(fm.specs && {
+      additionalProperty: Object.entries(fm.specs).map(([k, v]) => ({
+        "@type": "PropertyValue",
+        name: k,
+        value: v
+      }))
+    })
+  };
+}
+
+function buildFAQSchema(faq: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map(item => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a }
+    }))
+  };
+}
+
+const schemas = buildSchemas();
+---
+
+{schemas.map(schema => (
+  <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/<\//g, '<\\/')} />
+))}

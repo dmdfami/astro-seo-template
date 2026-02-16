@@ -1,0 +1,54 @@
+{
+  "site": {
+    "name": "Example Corp",
+    "url": "https://example.com",
+    "description": "Leading provider of industrial solutions",
+    "language": "en",
+    "defaultImage": "/images/og-default.jpg"
+  },
+  "navigation": {
+    "main": [
+      { "label": "Home", "href": "/" },
+      { "label": "About", "href": "/about" },
+      { "label": "Products", "href": "/products" },
+      { "label": "Blog", "href": "/blog" },
+      { "label": "Contact", "href": "/contact" }
+    ],
+    "footer": [
+      {
+        "title": "Company",
+        "links": [
+          { "label": "About Us", "href": "/about" },
+          { "label": "Careers", "href": "/careers" },
+          { "label": "Press", "href": "/press" }
+        ]
+      },
+      {
+        "title": "Resources",
+        "links": [
+          { "label": "Blog", "href": "/blog" },
+          { "label": "Documentation", "href": "/docs" },
+          { "label": "Support", "href": "/support" }
+        ]
+      }
+    ]
+  },
+  "social": {
+    "twitter": "https://twitter.com/example",
+    "linkedin": "https://linkedin.com/company/example",
+    "facebook": "https://facebook.com/example",
+    "github": "https://github.com/example"
+  },
+  "contact": {
+    "email": "info@example.com",
+    "phone": "+1-234-567-8900",
+    "address": "123 Business St, City, State 12345"
+  },
+  "features": {
+    "darkMode": true,
+    "search": true,
+    "blog": true,
+    "products": true,
+    "newsletter": true
+  }
+}

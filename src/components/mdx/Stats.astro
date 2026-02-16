@@ -1,0 +1,64 @@
+---
+import { cn } from '@lib/utils';
+
+interface StatItem {
+  label: string;
+  value: string;
+  icon?: string;
+}
+
+interface Props {
+  items: StatItem[];
+  cols?: 2 | 3 | 4;
+  animated?: boolean;
+}
+
+const { items, cols = 3, animated = false } = Astro.props;
+
+const gridCols = {
+  2: 'grid-cols-1 md:grid-cols-2',
+  3: 'grid-cols-1 md:grid-cols-3',
+  4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
+};
+---
+
+<div class={cn('grid gap-8', gridCols[cols])}>
+  {items.map((item) => (
+    <div class="text-center">
+      <div class={cn('text-4xl lg:text-5xl font-bold text-primary-600 dark:text-primary-400 mb-2', animated && 'stat-value')}>
+        {item.value}
+      </div>
+      <div class="text-lg text-neutral-600 dark:text-neutral-400">
+        {item.label}
+      </div>
+    </div>
+  ))}
+</div>
+
+{animated && (
+  <script is:inline>
+    function initStats() {
+      const stats = document.querySelectorAll('.stat-value');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !entry.target.dataset.animated) {
+            entry.target.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+              entry.target.style.transform = 'scale(1)';
+            }, 300);
+            entry.target.dataset.animated = 'true';
+          }
+        });
+      }, { threshold: 0.5 });
+
+      stats.forEach((stat) => {
+        stat.style.transition = 'transform 0.3s ease';
+        observer.observe(stat);
+      });
+    }
+
+    initStats();
+    document.addEventListener('astro:page-load', initStats);
+  </script>
+)}

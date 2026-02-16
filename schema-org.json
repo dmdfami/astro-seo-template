@@ -1,0 +1,28 @@
+{
+  "organization": {
+    "name": "Example Corp",
+    "url": "https://example.com",
+    "logo": "https://example.com/logo.png",
+    "sameAs": [
+      "https://twitter.com/example",
+      "https://linkedin.com/company/example",
+      "https://facebook.com/example"
+    ],
+    "contactPoint": {
+      "telephone": "+1-234-567-8900",
+      "contactType": "customer service",
+      "areaServed": "US",
+      "availableLanguage": "en"
+    }
+  },
+  "website": {
+    "name": "Example Corp",
+    "url": "https://example.com"
+  },
+  "authors": {
+    "default": {
+      "name": "Example Team",
+      "url": "https://example.com/about"
+    }
+  }
+}

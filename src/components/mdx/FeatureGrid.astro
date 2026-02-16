@@ -1,0 +1,87 @@
+---
+import { cn } from '@lib/utils';
+import Icon from '../ui/Icon.astro';
+
+interface Feature {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  features: Feature[];
+  cols?: 2 | 3 | 4;
+  class?: string;
+}
+
+const { features, cols = 3, class: className } = Astro.props;
+
+const gridCols = {
+  2: 'grid-cols-1 md:grid-cols-2',
+  3: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+  4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
+};
+---
+
+<div class={cn('grid gap-8', gridCols[cols], className)}>
+  {features.map((feature, index) => (
+    <div
+      class="feature-item opacity-0"
+      style={`animation-delay: ${index * 100}ms`}
+    >
+      <div class="flex items-start gap-4">
+        <div class="flex-shrink-0 w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center">
+          <Icon name={feature.icon} class="w-6 h-6 text-primary-600 dark:text-primary-400" />
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">
+            {feature.title}
+          </h3>
+          <p class="text-neutral-600 dark:text-neutral-400">
+            {feature.description}
+          </p>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .feature-item {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+</style>
+
+<script is:inline>
+  function initFeatureGrid() {
+    const items = document.querySelectorAll('.feature-item');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    items.forEach(item => {
+      item.style.animationPlayState = 'paused';
+      observer.observe(item);
+    });
+  }
+
+  initFeatureGrid();
+  document.addEventListener('astro:page-load', initFeatureGrid);
+</script>

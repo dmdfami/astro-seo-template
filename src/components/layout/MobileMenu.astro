@@ -1,0 +1,82 @@
+---
+import siteConfig from '../../../site-config.json';
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+
+const { main } = siteConfig.navigation;
+const currentPath = Astro.url.pathname;
+---
+
+<div>
+  <Button variant="icon" id="mobile-menu-toggle" class="md:hidden">
+    <Icon name="menu" id="menu-icon" />
+    <Icon name="close" id="close-icon" class="hidden" />
+  </Button>
+
+  <div
+    id="mobile-menu"
+    class="fixed inset-0 z-50 bg-white dark:bg-neutral-950 transform translate-x-full transition-transform duration-300 md:hidden"
+  >
+    <div class="flex justify-end p-4">
+      <Button variant="icon" id="mobile-menu-close">
+        <Icon name="close" />
+      </Button>
+    </div>
+    <div class="p-6 space-y-6">
+      {main.map((link: { label: string; href: string }) => (
+        <a
+          href={link.href}
+          class:list={[
+            'block text-lg font-medium',
+            currentPath === link.href
+              ? 'text-primary-600 dark:text-primary-400'
+              : 'text-neutral-900 dark:text-neutral-100'
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  function initMobileMenu() {
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const closeBtn = document.getElementById('mobile-menu-close');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeIcon = document.getElementById('close-icon');
+
+    if (!toggle || !menu) return;
+
+    function openMenu() {
+      menu.classList.remove('translate-x-full');
+      menu.classList.add('translate-x-0');
+      if (menuIcon) menuIcon.classList.add('hidden');
+      if (closeIcon) closeIcon.classList.remove('hidden');
+    }
+
+    function closeMenu() {
+      menu.classList.remove('translate-x-0');
+      menu.classList.add('translate-x-full');
+      if (menuIcon) menuIcon.classList.remove('hidden');
+      if (closeIcon) closeIcon.classList.add('hidden');
+    }
+
+    toggle.addEventListener('click', () => {
+      const isOpen = menu.classList.contains('translate-x-0');
+      isOpen ? closeMenu() : openMenu();
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+    // Close on link click
+    menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+  }
+
+  initMobileMenu();
+  document.addEventListener('astro:page-load', initMobileMenu);
+</script>
