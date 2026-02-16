@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test:schema": "node scripts/validate-schema.mjs"
+    "test:schema": "node scripts/validate-schema.mjs",
+    "test:layout": "node tests/test-layout-registry.cjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",

@@ -6,6 +6,7 @@ import Footer from '@components/layout/Footer.astro';
 import Container from '@components/sections/Container.astro';
 import Breadcrumb from '@components/seo/Breadcrumb.astro';
 import SchemaRenderer from '@components/seo/SchemaRenderer.astro';
+import { getLayout } from '../../lib/layout-registry';
 
 export async function getStaticPaths() {
   const products = await getCollection('products', ({ data }) => !data.draft);
@@ -18,6 +19,7 @@ export async function getStaticPaths() {
 const { product } = Astro.props;
 const { Content } = await render(product);
 const url = `${Astro.site}products/${product.id}`;
+const layout = getLayout('product');
 ---
 
 <BaseLayout
@@ -31,13 +33,15 @@ const url = `${Astro.site}products/${product.id}`;
 
   <main id="main-content" data-pagefind-body>
     <Container>
-      <Breadcrumb
-        items={[
-          { label: 'Home', href: '/' },
-          { label: 'Products', href: '/products' },
-          { label: product.data.title }
-        ]}
-      />
+      {layout.breadcrumb && (
+        <Breadcrumb
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Products', href: '/products' },
+            { label: product.data.title }
+          ]}
+        />
+      )}
 
       <div class="grid lg:grid-cols-2 gap-12 py-8 mb-12">
         <div>
@@ -46,7 +50,7 @@ const url = `${Astro.site}products/${product.id}`;
           )}
         </div>
         <div>
-          <h1 class="text-4xl font-bold font-heading mb-4">{product.data.title}</h1>
+          {layout.h1Auto && <h1 class="heading-hero mb-4">{product.data.title}</h1>}
           <p class="text-xl text-neutral-600 mb-6">{product.data.description}</p>
           {product.data.specs && (
             <div class="border border-neutral-200 rounded-lg overflow-hidden">
@@ -63,9 +67,13 @@ const url = `${Astro.site}products/${product.id}`;
         </div>
       </div>
 
-      <div class="prose max-w-none">
+      {layout.proseWrapper ? (
+        <div class="prose max-w-none">
+          <Content />
+        </div>
+      ) : (
         <Content />
-      </div>
+      )}
     </Container>
   </main>
 

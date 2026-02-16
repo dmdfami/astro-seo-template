@@ -185,6 +185,88 @@ body {
   margin-bottom: 2.5rem;
 }
 
+/* Homepage hybrid layout: full-width components + prose text content */
+.homepage-content {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+
+  /* Text content uses :where() for zero specificity — component styles override */
+  :where(p, ul, ol, blockquote) {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: calc(65ch + 2rem);
+    font-size: 1rem;
+    color: rgb(64 64 64 / 1);
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+  }
+
+  :where(h2, h3, h4, h5, h6) {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: calc(65ch + 2rem);
+    color: rgb(23 23 23 / 1);
+  }
+
+  :where(h2) {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-top: 4rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.375;
+    letter-spacing: -0.01em;
+  }
+
+  :where(h3) {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    line-height: 1.375;
+  }
+
+  :where(strong) {
+    font-weight: 600;
+    color: rgb(23 23 23 / 1);
+  }
+
+  :where(a) {
+    color: var(--color-primary-600);
+    text-decoration: underline;
+    text-decoration-color: var(--color-primary-200);
+    text-underline-offset: 2px;
+    transition: text-decoration-color 0.2s;
+  }
+  :where(a:hover) {
+    text-decoration-color: var(--color-primary-600);
+  }
+
+  :where(ul, ol) {
+    padding-left: 1.5em;
+  }
+  :where(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Images in prose flow */
+  :where(img) {
+    @apply rounded-xl my-8;
+  }
+
+  /* Responsive text sizes */
+  @media (min-width: 768px) {
+    :where(p, ul, ol) { font-size: 1.125rem; }
+    :where(h2) { font-size: 2.25rem; }
+    :where(h3) { font-size: 1.875rem; }
+  }
+}
+
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -7,11 +7,7 @@ import Container from '@components/sections/Container.astro';
 import Section from '@components/sections/Section.astro';
 import Breadcrumb from '@components/seo/Breadcrumb.astro';
 import SchemaRenderer from '@components/seo/SchemaRenderer.astro';
-
-// Content types that get full-width MDX rendering (no prose wrapper)
-const FULL_WIDTH_TYPES = ['landing', 'gallery', 'video-hub'];
-// Content types that get product-style layout
-const PRODUCT_TYPES = ['product'];
+import { getLayout } from '../lib/layout-registry';
 
 export async function getStaticPaths() {
   const pages = await getCollection('pages', ({ data }) =>
@@ -26,8 +22,8 @@ export async function getStaticPaths() {
 const { page } = Astro.props;
 const { Content } = await render(page);
 const { contentType } = page.data;
-const isFullWidth = FULL_WIDTH_TYPES.includes(contentType);
-const isProduct = PRODUCT_TYPES.includes(contentType);
+const layout = getLayout(contentType);
+const { pattern, h1Auto, breadcrumb } = layout;
 const url = `${Astro.site}${page.id}`;
 ---
 
@@ -35,7 +31,7 @@ const url = `${Astro.site}${page.id}`;
   title={page.data.title}
   description={page.data.description}
   image={page.data.image?.src}
-  type={isProduct ? 'product' : 'website'}
+  type={pattern === 'split' ? 'product' : 'website'}
   ogTitle={page.data.ogTitle}
   ogDescription={page.data.ogDescription}
   category={page.data.category}
@@ -48,17 +44,29 @@ const url = `${Astro.site}${page.id}`;
   />
   <Header />
 
-  {isFullWidth ? (
+  {pattern === 'fullwidth' && (
     <main id="main-content" data-pagefind-body>
+      {breadcrumb && (
+        <Container>
+          <Breadcrumb items={[
+            { label: 'Home', href: '/' },
+            { label: page.data.title }
+          ]} />
+        </Container>
+      )}
       <Content />
     </main>
-  ) : isProduct ? (
+  )}
+
+  {pattern === 'split' && (
     <main id="main-content" data-pagefind-body>
       <Container>
-        <Breadcrumb items={[
-          { label: 'Home', href: '/' },
-          { label: page.data.title }
-        ]} />
+        {breadcrumb && (
+          <Breadcrumb items={[
+            { label: 'Home', href: '/' },
+            { label: page.data.title }
+          ]} />
+        )}
         <div class="grid lg:grid-cols-2 gap-12 py-8 mb-12">
           <div>
             {page.data.image && (
@@ -67,7 +75,7 @@ const url = `${Astro.site}${page.id}`;
             )}
           </div>
           <div>
-            <h1 class="heading-hero mb-4">{page.data.title}</h1>
+            {h1Auto && <h1 class="heading-hero mb-4">{page.data.title}</h1>}
             <p class="text-xl text-neutral-600 mb-6">
               {page.data.description}
             </p>
@@ -85,20 +93,28 @@ const url = `${Astro.site}${page.id}`;
             )}
           </div>
         </div>
-        <div class="prose max-w-none">
+        {layout.proseWrapper ? (
+          <div class="prose max-w-none">
+            <Content />
+          </div>
+        ) : (
           <Content />
-        </div>
+        )}
       </Container>
     </main>
-  ) : (
+  )}
+
+  {(pattern === 'prose' || !['fullwidth', 'split', 'prose'].includes(pattern)) && (
     <Section padding="xl">
       <Container size="md">
-        <Breadcrumb items={[
-          { label: 'Home', href: '/' },
-          { label: page.data.title }
-        ]} />
+        {breadcrumb && (
+          <Breadcrumb items={[
+            { label: 'Home', href: '/' },
+            { label: page.data.title }
+          ]} />
+        )}
         <article class="prose max-w-none" id="main-content" data-pagefind-body>
-          <h1>{page.data.title}</h1>
+          {h1Auto && <h1 class="heading-hero mb-4">{page.data.title}</h1>}
           <Content />
         </article>
       </Container>
