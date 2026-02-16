@@ -1,0 +1,37 @@
+---
+interface Props {
+  bg?: 'white' | 'light' | 'gradient' | 'gradient-subtle';
+  padding?: 'sm' | 'md' | 'lg';
+  id?: string;
+  class?: string;
+}
+
+const {
+  bg = 'white',
+  padding = 'md',
+  id,
+  class: additionalClass = ''
+} = Astro.props;
+
+const bgClass = {
+  white: 'bg-white',
+  light: 'bg-neutral-50',
+  gradient: 'bg-gradient-to-b from-primary-50 via-white to-primary-50',
+  'gradient-subtle': 'bg-gradient-to-br from-primary-50 to-secondary-50'
+}[bg];
+
+const paddingClass = {
+  sm: 'section-compact',
+  md: 'section-standard',
+  lg: 'section-spacious'
+}[padding];
+---
+
+<section
+  {id}
+  class={`${bgClass} ${paddingClass} ${additionalClass}`}
+>
+  <div class="mx-auto px-4 max-w-7xl">
+    <slot />
+  </div>
+</section>

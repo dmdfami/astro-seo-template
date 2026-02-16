@@ -23,11 +23,11 @@ const pages = await getCollection('pages', ({ data }) => !data.draft);
         <div>
           <h2 class="text-2xl font-bold mb-4">Pages</h2>
           <ul class="space-y-2">
-            <li><a href="/" class="text-primary-600 dark:text-primary-400 hover:underline">Home</a></li>
-            <li><a href="/about" class="text-primary-600 dark:text-primary-400 hover:underline">About</a></li>
-            <li><a href="/contact" class="text-primary-600 dark:text-primary-400 hover:underline">Contact</a></li>
+            <li><a href="/" class="text-primary-600 hover:underline">Home</a></li>
+            <li><a href="/about" class="text-primary-600 hover:underline">About</a></li>
+            <li><a href="/contact" class="text-primary-600 hover:underline">Contact</a></li>
             {pages.map(page => (
-              <li><a href={`/${page.id}`} class="text-primary-600 dark:text-primary-400 hover:underline">{page.data.title}</a></li>
+              <li><a href={`/${page.id}`} class="text-primary-600 hover:underline">{page.data.title}</a></li>
             ))}
           </ul>
         </div>
@@ -37,7 +37,7 @@ const pages = await getCollection('pages', ({ data }) => !data.draft);
             <h2 class="text-2xl font-bold mb-4">Blog ({blogPosts.length} posts)</h2>
             <ul class="space-y-2">
               {blogPosts.map(post => (
-                <li><a href={`/blog/${post.id}`} class="text-primary-600 dark:text-primary-400 hover:underline">{post.data.title}</a></li>
+                <li><a href={`/blog/${post.id}`} class="text-primary-600 hover:underline">{post.data.title}</a></li>
               ))}
             </ul>
           </div>
@@ -48,7 +48,7 @@ const pages = await getCollection('pages', ({ data }) => !data.draft);
             <h2 class="text-2xl font-bold mb-4">Products ({products.length} items)</h2>
             <ul class="space-y-2">
               {products.map(product => (
-                <li><a href={`/products/${product.id}`} class="text-primary-600 dark:text-primary-400 hover:underline">{product.data.title}</a></li>
+                <li><a href={`/products/${product.id}`} class="text-primary-600 hover:underline">{product.data.title}</a></li>
               ))}
             </ul>
           </div>

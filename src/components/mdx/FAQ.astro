@@ -26,19 +26,19 @@ const items = rawItems.map(item => ({
   ) : (
     items.map((item) => (
       <div
-        class="border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden"
+        class="border border-neutral-200 rounded-lg overflow-hidden hover:border-primary-300 transition-colors"
         itemscope
         itemprop="mainEntity"
         itemtype="https://schema.org/Question"
       >
         <button
           type="button"
-          class="faq-trigger w-full px-6 py-4 text-left font-medium text-neutral-900 dark:text-white hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors flex items-center justify-between"
+          class="faq-trigger w-full px-6 py-4 text-left font-medium text-neutral-900 hover:bg-neutral-50 transition-colors flex items-center justify-between"
           aria-expanded="false"
         >
           <span itemprop="name">{item.q}</span>
           <svg
-            class="faq-icon w-5 h-5 transition-transform text-neutral-600 dark:text-neutral-400"
+            class="faq-icon w-5 h-5 transition-transform text-neutral-600"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -52,7 +52,7 @@ const items = rawItems.map(item => ({
           itemprop="acceptedAnswer"
           itemtype="https://schema.org/Answer"
         >
-          <div class="px-6 py-4 text-neutral-600 dark:text-neutral-400" itemprop="text">
+          <div class="px-6 py-4 text-neutral-600" itemprop="text">
             {item.a}
           </div>
         </div>

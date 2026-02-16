@@ -28,27 +28,27 @@ const hasSlot = Astro.slots.has('default');
 
 {hasSlot ? (
   <div id={id} class:list={[fullWidth && 'w-full']}>
-    <Button href={href} variant={variant} size={size} class:list={[fullWidth && 'w-full']}>
+    <Button href={href} variant={variant} size={size} class:list={[fullWidth && 'w-full', 'px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300']}>
       <slot />
     </Button>
     {description && (
-      <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">{description}</p>
+      <p class="mt-2 text-sm text-neutral-600">{description}</p>
     )}
   </div>
 ) : (
   <div class="flex flex-wrap gap-4 items-center">
     {primary && (
-      <Button href={primary.url} variant="primary" size="lg">
+      <Button href={primary.url} variant="primary" size="lg" class="px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         {primary.text}
       </Button>
     )}
     {secondary && (
-      <Button href={secondary.url} variant="outline" size="lg">
+      <Button href={secondary.url} variant="outline" size="lg" class="px-8 py-4 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         {secondary.text}
       </Button>
     )}
     {note && (
-      <p class="text-sm text-neutral-600 dark:text-neutral-400">
+      <p class="text-sm text-neutral-600">
         {note}
       </p>
     )}

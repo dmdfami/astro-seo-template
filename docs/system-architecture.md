@@ -112,13 +112,13 @@ src/content/blog/my-post.mdx ──> /blog/my-post/
 src/content/products/item.mdx ──> /products/item/
 ```
 
-### 3. Component Layer (44 Auto-Imported Components)
+### 3. Component Layer (64 Auto-Imported Components)
 
 **Architecture:**
 ```
 astro-auto-import integration
     ↓
-AutoImport({ imports: [...44 components...] })
+AutoImport({ imports: [...64 components...] })
     ↓
 Available in all .mdx files without import statements
     ↓
@@ -129,42 +129,49 @@ Client-side interactivity only where needed (client:load)
 
 **Component Categories:**
 
-| Category | Examples | Rendering |
-|----------|----------|-----------|
-| Content | Hero, Callout, FAQ, CTA | Server-side (static HTML) |
-| Data | PricingTable, ComparisonTable, Tabs | Server-side + optional JS for tabs |
-| Interactive | Modal, Drawer, Accordion | Server-side + client:load JS |
-| Social | ClientLogos, TrustBar, WhatsAppButton | Server-side |
-| Visual | Gallery, BeforeAfter, Timeline | Server-side (lazy-load images) |
+| Category | Count | Examples | Rendering |
+|----------|-------|----------|-----------|
+| Premium | 6 | Highlight, FloatingBadge, BentoGrid | Server-side (visual emphasis) |
+| Content | 10 | Hero, Callout, FAQ, CTA, Stats | Server-side (static HTML) |
+| Utility | 11 | Alert, Banner, Quote, Table, List | Server-side (reusable blocks) |
+| Data & Interactive | 18 | PricingTable, Accordion, Modal, Tabs | Server-side + client:load JS |
+| Product & Visual | 12 | Gallery, BeforeAfter, SpecTable, Counter | Server-side (lazy-load images) |
+| Social & Trust | 7 | ClientLogos, TrustBar, Timeline, Forms | Server-side + optional JS |
 
 ### 4. Styling Layer
 
-**Tailwind CSS 4 Pipeline:**
+**Design Token Compilation Pipeline:**
 ```
-design-tokens.json
+design-tokens.json (colors, typography, spacing)
     ↓
-generate-theme.mjs (runs on prebuild)
+generate-theme.mjs (prebuild script)
     ↓
-theme.css (@theme directive)
+theme.css (@theme directive for Tailwind)
     ↓
 global.css (@import tailwindcss + theme.css)
     ↓
-Component classes (@apply in .astro files)
+Component utilities (@apply in .astro, classes in MDX)
     ↓
 Compiled CSS bundled in dist/
 ```
 
-**CSS Custom Properties (Runtime Swappable):**
+**CSS Variables (Light Theme Only):**
 ```css
 :root {
-  --color-primary-50: oklch(98% 0.02 250);
-  --glass-bg: rgba(255, 255, 255, 0.5);
-  --gradient-hero: linear-gradient(...);
-}
+  /* OKLCH colors (perceptually uniform) */
+  --color-primary-50: oklch(0.97 0.01 178);
+  --color-primary-500: oklch(0.60 0.13 178);
+  --color-primary-900: oklch(0.27 0.07 178);
 
-.dark {
-  --glass-bg: rgba(0, 0, 0, 0.3);
-  --gradient-hero: linear-gradient(...);
+  /* Typography scales */
+  --text-heading-hero: 3.5rem / 1.2;
+  --text-heading-lg: 2.25rem / 1.3;
+  --text-base: 1rem / 1.5;
+
+  /* Glass morphism */
+  --glass-bg: rgba(255, 255, 255, 0.5);
+  --glass-blur: blur(10px);
+  --glass-border: rgba(0, 0, 0, 0.1);
 }
 ```
 

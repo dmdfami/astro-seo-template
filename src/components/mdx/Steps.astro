@@ -17,17 +17,20 @@ const hasSlot = Astro.slots.has('default');
     <slot />
   ) : (
     items.map((item, index) => (
-      <div class="flex gap-6">
-        <div class="flex-shrink-0">
-          <div class="w-12 h-12 rounded-full bg-primary-600 dark:bg-primary-500 text-white flex items-center justify-center text-xl font-bold">
+      <div class="flex gap-6 relative">
+        <div class="flex-shrink-0 relative">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center text-xl font-bold shadow-md">
             {index + 1}
           </div>
+          {index < items.length - 1 && (
+            <div class="absolute top-12 left-1/2 -translate-x-1/2 w-0.5 h-8 bg-primary-200"></div>
+          )}
         </div>
-        <div class="flex-1 pt-2">
-          <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">
+        <div class="flex-1 pt-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4">
+          <h3 class="text-xl font-bold text-neutral-900 mb-2">
             {item.title}
           </h3>
-          <p class="text-neutral-600 dark:text-neutral-400">
+          <p class="text-neutral-600">
             {item.description}
           </p>
         </div>

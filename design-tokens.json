@@ -14,14 +14,26 @@
       "950": "oklch(0.17 0.05 178)"
     },
     "secondary": {
-      "50": "oklch(0.97 0.02 40)",
-      "500": "oklch(0.74 0.17 40.24)",
-      "900": "oklch(0.35 0.10 40)"
+      "50": "oklch(0.98 0.01 240)",
+      "100": "oklch(0.95 0.02 240)",
+      "200": "oklch(0.90 0.03 240)",
+      "300": "oklch(0.82 0.05 240)",
+      "400": "oklch(0.70 0.08 240)",
+      "500": "oklch(0.58 0.10 240)",
+      "600": "oklch(0.48 0.11 240)",
+      "700": "oklch(0.38 0.09 240)",
+      "800": "oklch(0.28 0.07 240)",
+      "900": "oklch(0.20 0.05 240)",
+      "950": "oklch(0.12 0.03 240)"
     },
     "accent": {
+      "50": "oklch(0.97 0.04 75)",
+      "100": "oklch(0.94 0.08 75)",
+      "200": "oklch(0.88 0.12 75)",
       "400": "oklch(0.77 0.16 75)",
       "500": "oklch(0.72 0.18 75)",
-      "600": "oklch(0.65 0.19 75)"
+      "600": "oklch(0.65 0.19 75)",
+      "700": "oklch(0.55 0.16 75)"
     },
     "neutral": {
       "50": "#fafaf9",
@@ -63,7 +75,11 @@
     "lg": "1.5rem",
     "xl": "2rem",
     "2xl": "3rem",
-    "3xl": "4rem"
+    "3xl": "4rem",
+    "section-sm": "4rem",
+    "section-md": "6rem",
+    "section-lg": "8rem",
+    "content-break": "2.5rem"
   },
   "radius": {
     "sm": "0.25rem",
@@ -81,14 +97,17 @@
     "glass": "0 8px 32px 0 rgba(31, 38, 135, 0.15)"
   },
   "glass": {
-    "bg": "rgba(255, 255, 255, 0.08)",
-    "bgLight": "rgba(255, 255, 255, 0.15)",
-    "border": "rgba(255, 255, 255, 0.18)",
+    "bg": "rgba(255, 255, 255, 0.7)",
+    "bgLight": "rgba(255, 255, 255, 0.85)",
+    "border": "rgba(0, 0, 0, 0.08)",
     "blur": "12px"
   },
   "gradients": {
     "hero": "linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-500))",
     "card": "linear-gradient(135deg, var(--color-primary-900), var(--color-primary-800))",
-    "accent": "linear-gradient(135deg, var(--color-accent-400), var(--color-accent-600))"
+    "accent": "linear-gradient(135deg, var(--color-accent-400), var(--color-accent-600))",
+    "text-primary": "linear-gradient(135deg, var(--color-primary-600), var(--color-primary-400))",
+    "text-teal-blue": "linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-500))",
+    "text-accent": "linear-gradient(135deg, var(--color-accent-500), var(--color-primary-500))"
   }
 }

@@ -1,0 +1,26 @@
+---
+interface Props {
+  variant?: 'certification' | 'trust' | 'feature';
+  icon?: string;
+}
+
+const { variant = 'feature', icon } = Astro.props;
+
+const variantClasses = {
+  certification: 'bg-gradient-to-r from-primary-50 to-primary-100 border-primary-200 text-primary-700',
+  trust: 'bg-gradient-to-r from-secondary-50 to-secondary-100 border-secondary-200 text-secondary-700',
+  feature: 'bg-gradient-to-r from-accent-50 to-accent-100 border-accent-200 text-accent-700'
+}[variant];
+---
+
+<div
+  class={`inline-flex items-center gap-2 px-4 py-2 ${variantClasses}
+          border rounded-full shadow-sm
+          hover:shadow-md hover:-translate-y-0.5
+          transition-all duration-300 cursor-default`}
+>
+  {icon && <span class="text-lg" aria-hidden="true">{icon}</span>}
+  <span class="text-sm font-semibold">
+    <slot />
+  </span>
+</div>

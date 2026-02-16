@@ -16,12 +16,12 @@ const { items } = Astro.props;
         {item.href ? (
           <a
             href={item.href}
-            class="text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+            class="text-neutral-600 hover:text-primary-600 transition-colors"
           >
             {item.label}
           </a>
         ) : (
-          <span class="text-neutral-900 dark:text-white font-medium">
+          <span class="text-neutral-900 font-medium">
             {item.label}
           </span>
         )}

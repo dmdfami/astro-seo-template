@@ -1,0 +1,30 @@
+---
+interface Props {
+  variant?: 'line' | 'dots' | 'gradient';
+  spacing?: 'sm' | 'md' | 'lg';
+}
+
+const { variant = 'line', spacing = 'md' } = Astro.props;
+
+const spacingClass = {
+  sm: 'my-6',
+  md: 'my-10',
+  lg: 'my-16'
+}[spacing];
+---
+
+{variant === 'line' && (
+  <hr class={`${spacingClass} border-neutral-200`} />
+)}
+
+{variant === 'dots' && (
+  <div class={`${spacingClass} flex items-center justify-center gap-2`}>
+    <span class="w-2 h-2 rounded-full bg-primary-300"></span>
+    <span class="w-2 h-2 rounded-full bg-primary-400"></span>
+    <span class="w-2 h-2 rounded-full bg-primary-300"></span>
+  </div>
+)}
+
+{variant === 'gradient' && (
+  <div class={`${spacingClass} h-px bg-gradient-to-r from-transparent via-primary-300 to-transparent`}></div>
+)}

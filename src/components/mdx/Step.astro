@@ -9,15 +9,15 @@ const { title, number } = Astro.props;
 
 <div class="flex gap-6 mb-8">
   <div class="flex-shrink-0">
-    <div class="w-12 h-12 rounded-full bg-primary-600 dark:bg-primary-500 text-white flex items-center justify-center text-xl font-bold">
+    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center text-xl font-bold shadow-md">
       {number || '•'}
     </div>
   </div>
-  <div class="flex-1 pt-2">
-    <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">
+  <div class="flex-1 pt-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4">
+    <h3 class="text-xl font-bold text-neutral-900 mb-2">
       {title}
     </h3>
-    <div class="text-neutral-600 dark:text-neutral-400 prose dark:prose-invert">
+    <div class="text-neutral-600 prose">
       <slot />
     </div>
   </div>

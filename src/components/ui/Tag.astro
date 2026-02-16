@@ -12,8 +12,8 @@ const { href, removable = false, class: className } = Astro.props;
 const Tag = href ? 'a' : 'span';
 const classes = cn(
   'inline-flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md',
-  'bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200',
-  'hover:bg-primary-200 dark:hover:bg-primary-800 transition-colors',
+  'bg-primary-100 text-primary-800',
+  'hover:bg-primary-200 transition-colors',
   className
 );
 ---
@@ -21,7 +21,7 @@ const classes = cn(
 <Tag class={classes} href={href}>
   <slot />
   {removable && (
-    <button type="button" class="ml-1 hover:text-primary-900 dark:hover:text-primary-100" aria-label="Remove tag">
+    <button type="button" class="ml-1 hover:text-primary-900" aria-label="Remove tag">
       <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
         <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
       </svg>

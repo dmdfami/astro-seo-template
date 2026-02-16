@@ -1,0 +1,19 @@
+---
+interface Props {
+  variant?: 'primary' | 'teal-blue' | 'accent';
+}
+
+const { variant = 'primary' } = Astro.props;
+
+const gradientClass = {
+  'primary': 'bg-[image:var(--gradient-text-primary)]',
+  'teal-blue': 'bg-[image:var(--gradient-text-teal-blue)]',
+  'accent': 'bg-[image:var(--gradient-text-accent)]'
+}[variant];
+---
+
+<span
+  class={`${gradientClass} inline-block text-transparent bg-clip-text font-semibold`}
+>
+  <slot />
+</span>

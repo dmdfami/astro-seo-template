@@ -1,0 +1,39 @@
+---
+interface Props {
+  plan: string;
+  price: string;
+  period?: string;
+  features: string[];
+  ctaText?: string;
+  ctaLink?: string;
+  highlighted?: boolean;
+}
+
+const { plan, price, period = '/month', features, ctaText = 'Get Started', ctaLink = '/contact', highlighted = false } = Astro.props;
+---
+
+<div class={`rounded-2xl p-8 flex flex-col ${highlighted
+  ? 'bg-gradient-to-br from-primary-600 to-secondary-600 text-white shadow-xl scale-105 border-2 border-primary-400'
+  : 'bg-white border border-neutral-200 shadow-sm'} hover:shadow-lg transition-all duration-300`}>
+  <h3 class={`text-xl font-bold mb-2 ${highlighted ? 'text-white' : 'text-neutral-900'}`}>{plan}</h3>
+  <div class="mb-6">
+    <span class={`text-4xl font-bold ${highlighted ? 'text-white' : 'text-primary-600'}`}>{price}</span>
+    {period && <span class={`text-sm ${highlighted ? 'text-primary-100' : 'text-neutral-500'}`}>{period}</span>}
+  </div>
+  <ul class="space-y-3 mb-8 flex-1">
+    {features.map(feature => (
+      <li class="flex items-start gap-2">
+        <span class={`flex-shrink-0 ${highlighted ? 'text-primary-200' : 'text-primary-600'}`}>✓</span>
+        <span class={`text-sm ${highlighted ? 'text-primary-50' : 'text-neutral-600'}`}>{feature}</span>
+      </li>
+    ))}
+  </ul>
+  <a
+    href={ctaLink}
+    class={`block text-center py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-0.5 ${highlighted
+      ? 'bg-white text-primary-600 hover:shadow-lg'
+      : 'bg-gradient-to-r from-primary-600 to-primary-500 text-white hover:shadow-lg'}`}
+  >
+    {ctaText}
+  </a>
+</div>

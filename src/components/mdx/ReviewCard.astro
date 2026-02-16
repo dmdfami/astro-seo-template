@@ -26,7 +26,7 @@ const {
 const formattedDate = typeof date === 'string' ? date : formatDate(date);
 ---
 
-<div class={`bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 ${className || ''}`}>
+<div class={`bg-white border border-neutral-200 rounded-xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-primary-300 transition-all duration-300 ${className || ''}`}>
   <div class="flex items-start justify-between mb-4">
     <StarRating rating={rating} />
     {verified && (
@@ -34,19 +34,19 @@ const formattedDate = typeof date === 'string' ? date : formatDate(date);
     )}
   </div>
 
-  <h3 class="text-lg font-bold text-neutral-900 dark:text-white mb-2">
+  <h3 class="text-lg font-bold text-neutral-900 mb-2">
     {title}
   </h3>
 
-  <p class="text-neutral-600 dark:text-neutral-400 mb-4">
+  <p class="text-neutral-600 mb-4">
     {review}
   </p>
 
   <div class="flex items-center justify-between text-sm">
-    <span class="font-medium text-neutral-900 dark:text-white">
+    <span class="font-medium text-neutral-900">
       {author}
     </span>
-    <span class="text-neutral-600 dark:text-neutral-400">
+    <span class="text-neutral-600">
       {formattedDate}
     </span>
   </div>

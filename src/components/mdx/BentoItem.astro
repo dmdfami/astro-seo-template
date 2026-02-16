@@ -1,0 +1,23 @@
+---
+interface Props {
+  span?: 1 | 2;
+  rowSpan?: 1 | 2;
+  class?: string;
+}
+
+const { span = 1, rowSpan = 1, class: additionalClass = '' } = Astro.props;
+
+const spanMap: Record<number, string> = { 1: 'col-span-1', 2: 'md:col-span-2' };
+const rowSpanMap: Record<number, string> = { 1: 'row-span-1', 2: 'row-span-2' };
+const spanClass = spanMap[span] ?? 'col-span-1';
+const rowSpanClass = rowSpanMap[rowSpan] ?? 'row-span-1';
+---
+
+<div
+  class={`${spanClass} ${rowSpanClass} ${additionalClass}
+          bg-white rounded-2xl border border-neutral-200
+          p-6 flex flex-col justify-between
+          hover:shadow-lg transition-shadow duration-300`}
+>
+  <slot />
+</div>

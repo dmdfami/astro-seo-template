@@ -31,7 +31,7 @@ const paddingBottom = aspectRatio === '16:9' ? '56.25%' : '75%';
 ---
 
 <div class={cn('video-embed-wrapper', className)}>
-  <div class="relative overflow-hidden rounded-lg" style={`padding-bottom: ${paddingBottom}`}>
+  <div class="relative overflow-hidden rounded-xl shadow-sm" style={`padding-bottom: ${paddingBottom}`}>
     <iframe
       src={embedUrl}
       title={title}

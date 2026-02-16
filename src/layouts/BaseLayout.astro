@@ -85,28 +85,6 @@ const siteSchema = {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-  <!-- Dark mode script (inline to prevent FOUC) -->
-  <script is:inline>
-    (function() {
-      const theme = localStorage.getItem('theme');
-      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      }
-    })();
-  </script>
-
-  <!-- Re-apply dark mode after view transition -->
-  <script is:inline>
-    document.addEventListener('astro:after-swap', () => {
-      const theme = localStorage.getItem('theme');
-      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    });
-  </script>
-
   <!-- Schema.org Tier 1: Organization + WebSite -->
   <script type="application/ld+json" set:html={JSON.stringify(orgSchema).replace(/<\//g, '<\\/')} />
   <script type="application/ld+json" set:html={JSON.stringify(siteSchema).replace(/<\//g, '<\\/')} />

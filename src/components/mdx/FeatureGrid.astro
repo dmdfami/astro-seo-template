@@ -1,6 +1,5 @@
 ---
 import { cn } from '@lib/utils';
-import Icon from '../ui/Icon.astro';
 
 interface Feature {
   icon: string;
@@ -30,14 +29,14 @@ const gridCols = {
       style={`animation-delay: ${index * 100}ms`}
     >
       <div class="flex items-start gap-4">
-        <div class="flex-shrink-0 w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center">
-          <Icon name={feature.icon} class="w-6 h-6 text-primary-600 dark:text-primary-400" />
+        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center text-white text-2xl">
+          {feature.icon || "✓"}
         </div>
         <div>
-          <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">
+          <h3 class="text-xl font-bold text-neutral-900 mb-2">
             {feature.title}
           </h3>
-          <p class="text-neutral-600 dark:text-neutral-400">
+          <p class="text-neutral-600">
             {feature.description}
           </p>
         </div>

@@ -30,13 +30,13 @@ const arrows = {
   </span>
   <span
     class={cn(
-      'tooltip-content absolute z-50 px-3 py-2 text-sm text-white bg-neutral-900 dark:bg-neutral-700 rounded-lg whitespace-nowrap opacity-0 invisible transition-all duration-200',
+      'tooltip-content absolute z-50 px-3 py-2 text-sm text-white bg-neutral-900 rounded-xl shadow-lg whitespace-nowrap opacity-0 invisible transition-all duration-200',
       positions[position]
     )}
     role="tooltip"
   >
     {content}
-    <span class={cn('absolute w-2 h-2 bg-neutral-900 dark:bg-neutral-700 transform rotate-45', arrows[position])}></span>
+    <span class={cn('absolute w-2 h-2 bg-neutral-900 transform rotate-45', arrows[position])}></span>
   </span>
 </span>
 

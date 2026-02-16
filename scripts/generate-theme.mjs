@@ -42,8 +42,8 @@ for (const [name, value] of Object.entries(tokens.shadows)) {
 
 css += '}\n\n';
 
-// Runtime CSS vars for dark mode
-css += '/* Runtime-swappable tokens for dark mode */\n';
+// Runtime CSS variables
+css += '/* Runtime CSS variables */\n';
 css += ':root {\n';
 css += `  --glass-bg: ${tokens.glass.bg};\n`;
 css += `  --glass-bg-light: ${tokens.glass.bgLight};\n`;
@@ -52,12 +52,9 @@ css += `  --glass-blur: ${tokens.glass.blur};\n`;
 css += `  --gradient-hero: ${tokens.gradients.hero};\n`;
 css += `  --gradient-card: ${tokens.gradients.card};\n`;
 css += `  --gradient-accent: ${tokens.gradients.accent};\n`;
-css += '}\n\n';
-
-css += '.dark {\n';
-css += '  --glass-bg: rgba(0, 0, 0, 0.3);\n';
-css += '  --glass-bg-light: rgba(255, 255, 255, 0.05);\n';
-css += '  --glass-border: rgba(255, 255, 255, 0.1);\n';
+css += `  --gradient-text-primary: ${tokens.gradients['text-primary']};\n`;
+css += `  --gradient-text-teal-blue: ${tokens.gradients['text-teal-blue']};\n`;
+css += `  --gradient-text-accent: ${tokens.gradients['text-accent']};\n`;
 css += '}\n';
 
 writeFileSync(join(rootDir, 'src/styles/theme.css'), css);

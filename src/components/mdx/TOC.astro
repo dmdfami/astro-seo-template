@@ -27,14 +27,14 @@ const headings = rawHeadings || (items?.map(item => ({
 })) || []);
 ---
 
-<div class="toc-container lg:sticky lg:top-24 border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 bg-white dark:bg-neutral-950">
+<div class="toc-container lg:sticky lg:top-24 border border-neutral-200 rounded-xl p-6 bg-white shadow-sm">
   <div class="flex items-center justify-between mb-4 lg:mb-0">
-    <h2 class="text-lg font-bold text-neutral-900 dark:text-white">
+    <h2 class="text-lg font-bold text-neutral-900">
       {title}
     </h2>
     <button
       type="button"
-      class="toc-toggle lg:hidden text-neutral-600 dark:text-neutral-400"
+      class="toc-toggle lg:hidden text-neutral-600"
       aria-label="Toggle table of contents"
     >
       <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -48,7 +48,7 @@ const headings = rawHeadings || (items?.map(item => ({
         <li style={`margin-left: ${(heading.depth - 2) * 1}rem`}>
           <a
             href={`#${heading.slug}`}
-            class="toc-link block text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-1"
+            class="toc-link block text-sm text-neutral-600 hover:text-primary-600 transition-colors py-1"
             data-slug={heading.slug}
           >
             {heading.text}
@@ -77,8 +77,8 @@ const headings = rawHeadings || (items?.map(item => ({
         const link = document.querySelector(`.toc-link[data-slug="${id}"]`);
         if (link) {
           if (entry.isIntersecting) {
-            links.forEach((l) => l.classList.remove('text-primary-600', 'dark:text-primary-400', 'font-medium'));
-            link.classList.add('text-primary-600', 'dark:text-primary-400', 'font-medium');
+            links.forEach((l) => l.classList.remove('text-primary-600', 'font-medium'));
+            link.classList.add('text-primary-600', 'font-medium');
           }
         }
       });

@@ -50,23 +50,36 @@ const classes = `hero ${variant}`;
 ```
 
 ### Client-Side Interactivity
-Use `client:load` or `client:idle` for interactive components:
+Use `client:load` or `client:idle` only for truly interactive components:
 
 ```astro
 ---
-// ui/dark-mode-toggle.astro
+// components/mdx/accordion.astro
+interface Props {
+  items: Array<{ title: string; content: string }>;
+}
+
+const { items } = Astro.props;
 ---
-<button id="theme-toggle" client:load>
-  <svg><!-- toggle icon --></svg>
-</button>
+
+<div id="accordion" client:load>
+  {items.map((item, i) => (
+    <div class="accordion-item">
+      <button class="accordion-trigger rounded-lg bg-primary-50 hover:bg-primary-100">
+        {item.title}
+      </button>
+      <div class="accordion-content hidden">
+        {item.content}
+      </div>
+    </div>
+  ))}
+</div>
 
 <script>
-  const button = document.getElementById('theme-toggle');
-  button?.addEventListener('click', () => {
-    document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme-preference',
-      document.documentElement.classList.contains('dark') ? 'dark' : 'light'
-    );
+  document.querySelectorAll('.accordion-trigger').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.currentTarget.classList.toggle('active');
+    });
   });
 </script>
 ```
@@ -150,61 +163,68 @@ export default defineConfig({
 @import "tailwindcss";
 @import "./theme.css";
 
-/* Define custom variants */
-@custom-variant dark (&:where(.dark, .dark *));
-
 /* Base styles (reset + typography) */
 @layer base {
   html { scroll-behavior: smooth; }
-  body { @apply font-body text-neutral-900 dark:text-neutral-100; }
+  body { @apply font-body text-neutral-900; }
+  h1 { @apply text-heading-hero font-bold; }
 }
 
-/* Utilities (reusable classes) */
+/* Utilities (reusable patterns) */
 @layer utilities {
   .glass {
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: var(--glass-blur);
     border: 1px solid var(--glass-border);
   }
+
+  .section-standard { @apply py-24; }
+  .section-compact { @apply py-18; }
+  .section-spacious { @apply py-32; }
 }
 ```
 
-### @theme Directive
-Design tokens compile to Tailwind's `@theme` block:
-
+### @theme Directive (Auto-Generated)
 ```css
-/* src/styles/theme.css (AUTO-GENERATED) */
+/* src/styles/theme.css - AUTO-GENERATED from design-tokens.json */
 @theme {
-  /* Colors from design-tokens.json */
-  --color-primary-50: oklch(98% 0.02 250);
-  --color-primary-900: oklch(25% 0.15 250);
+  /* OKLCH Colors */
+  --color-primary-50: oklch(0.97 0.01 178);
+  --color-primary-500: oklch(0.60 0.13 178);
+  --color-primary-900: oklch(0.27 0.07 178);
 
   /* Typography */
-  --font-body: ui-sans-serif, system-ui, sans-serif;
+  --text-heading-hero: 3.5rem / 1.2;
+  --text-heading-lg: 2.25rem / 1.3;
   --text-base: 1rem / 1.5;
 
-  /* Spacing scale */
+  /* Spacing */
   --spacing-xs: 0.5rem;
   --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
 
-  /* Border radius */
+  /* Radius (rounded corners) */
   --radius-sm: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 1rem;
 }
 ```
 
-### Class Naming
-Use semantic, descriptive names:
-
+### Premium Visual Standards
 ```astro
-<!-- ✓ Clear, semantic -->
-<div class="flex gap-4 rounded-lg bg-primary-50 p-6 dark:bg-neutral-900">
-  <h2 class="text-lg font-bold text-primary-900 dark:text-white">Title</h2>
+<!-- ✓ Modern component pattern -->
+<div class="rounded-xl bg-gradient-to-br from-primary-50 to-secondary-50 p-6 shadow-md hover:shadow-lg transition-shadow">
+  <h2 class="text-heading-md font-bold text-primary-900 mb-2">Feature</h2>
+  <p class="text-base text-neutral-600">Content with clear hierarchy</p>
 </div>
 
-<!-- ✗ Non-descriptive shortcuts -->
-<div class="flex gap-1 rounded p-2 dark:bg-black">
-  <h2 class="font-bold text-primary">Title</h2>
-</div>
+<!-- ✓ Section with rhythm -->
+<section class="section-standard">
+  <div class="max-w-4xl mx-auto px-6">Content</div>
+</section>
+
+<!-- ✗ Avoid inline colors (use tokens) -->
+<div class="bg-blue-500 p-2">Not semantic</div>
 ```
 
 ## MDX Components in Content
@@ -343,50 +363,22 @@ const schema = {
 2. **Auto-generated** (per page: BlogPosting, Product, BreadcrumbList)
 3. **Frontmatter** (optional custom schemas: FAQ, Recipe, Review)
 
-## Dark Mode Implementation
+## Light-Only Theme (No Dark Mode)
 
-### Storage & Detection
-```typescript
-// src/lib/theme-preference.ts
-export function getThemePreference(): 'light' | 'dark' | 'system' {
-  return localStorage.getItem('theme-preference') ?? 'system';
-}
+**Design Decision:** Dark mode removed to simplify codebase and reduce CSS size.
 
-export function applyTheme(preference: string): void {
-  const isDark = preference === 'dark' ||
-    (preference === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+### Why Light Theme Only
+- **Reduced complexity:** No `.dark` selector variants
+- **Smaller CSS:** ~10% reduction in compiled bundle
+- **Better contrast:** OKLCH colors designed for light backgrounds
+- **Maintenance:** Single design system vs. dual variants
+- **Performance:** Fewer CSS variables to swap
 
-  document.documentElement.classList.toggle('dark', isDark);
-}
-
-// Call on page load
-applyTheme(getThemePreference());
-```
-
-### CSS Variable Swapping
-Light mode (default):
-```css
-:root {
-  --glass-bg: rgba(255, 255, 255, 0.5);
-  --glass-border: rgba(0, 0, 0, 0.1);
-}
-```
-
-Dark mode override:
-```css
-.dark {
-  --glass-bg: rgba(0, 0, 0, 0.3);
-  --glass-border: rgba(255, 255, 255, 0.1);
-}
-```
-
-### Dark Mode Utilities
-```astro
-<!-- Use dark: prefix for dark-mode-specific styles -->
-<div class="bg-white dark:bg-neutral-900">
-  Content adapts to light/dark
-</div>
-```
+### OKLCH Advantage Over HSL
+- **Perceptually uniform:** Equal chroma/lightness steps feel equally different
+- **Better for accessibility:** High contrast ratios naturally built-in
+- **Color harmony:** Easier to create complementary palettes
+- **Future-proof:** Modern browser standard, better for P3 wide gamut displays
 
 ## Error Handling
 

@@ -18,26 +18,26 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     <Container>
       <div class="text-center mb-12">
         <h1 class="text-4xl lg:text-5xl font-bold font-heading mb-4">Blog</h1>
-        <p class="text-xl text-neutral-600 dark:text-neutral-400">Latest articles and insights</p>
+        <p class="text-xl text-neutral-600">Latest articles and insights</p>
       </div>
 
       {posts.length > 0 ? (
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map(post => (
-            <a href={`/blog/${post.id}`} class="group block rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden hover:shadow-lg transition-shadow">
+            <a href={`/blog/${post.id}`} class="group block rounded-xl border border-neutral-200 overflow-hidden hover:shadow-lg transition-shadow">
               {post.data.image && (
                 <img src={post.data.image.src} alt={post.data.image.alt} class="w-full h-48 object-cover" loading="lazy" />
               )}
               <div class="p-6">
                 <div class="flex gap-2 mb-2">
                   {post.data.tags?.slice(0, 2).map((tag: string) => (
-                    <span class="text-xs font-medium text-primary-600 dark:text-primary-400">#{tag}</span>
+                    <span class="text-xs font-medium text-primary-600">#{tag}</span>
                   ))}
                 </div>
-                <h2 class="text-xl font-bold mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                <h2 class="text-xl font-bold mb-2 group-hover:text-primary-600 transition-colors">
                   {post.data.title}
                 </h2>
-                <p class="text-neutral-600 dark:text-neutral-400 text-sm line-clamp-2">{post.data.description}</p>
+                <p class="text-neutral-600 text-sm line-clamp-2">{post.data.description}</p>
                 <time class="block mt-3 text-xs text-neutral-500">{formatDate(post.data.publishDate)}</time>
               </div>
             </a>

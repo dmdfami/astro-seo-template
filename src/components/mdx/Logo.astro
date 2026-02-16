@@ -1,0 +1,21 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  href?: string;
+}
+
+const { src, alt, width = 160, height = 40, href } = Astro.props;
+
+const imgTag = `<img src="${src}" alt="${alt}" width="${width}" height="${height}" class="h-auto max-h-10 w-auto object-contain" loading="lazy" />`;
+---
+
+{href ? (
+  <a href={href} class="inline-block">
+    <img src={src} alt={alt} width={width} height={height} class="h-auto max-h-10 w-auto object-contain" loading="lazy" />
+  </a>
+) : (
+  <img src={src} alt={alt} width={width} height={height} class="h-auto max-h-10 w-auto object-contain" loading="lazy" />
+)}

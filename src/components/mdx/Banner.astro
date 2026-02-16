@@ -1,0 +1,29 @@
+---
+interface Props {
+  bg?: 'primary' | 'secondary' | 'accent' | 'neutral';
+  icon?: string;
+  ctaText?: string;
+  ctaLink?: string;
+}
+
+const { bg = 'primary', icon, ctaText, ctaLink } = Astro.props;
+
+const bgClasses = {
+  primary: 'bg-gradient-to-r from-primary-600 to-primary-500 text-white',
+  secondary: 'bg-gradient-to-r from-secondary-600 to-secondary-500 text-white',
+  accent: 'bg-gradient-to-r from-accent-500 to-accent-400 text-neutral-900',
+  neutral: 'bg-neutral-100 text-neutral-900'
+}[bg];
+---
+
+<div class={`${bgClasses} py-3 px-4 text-center text-sm font-medium`}>
+  <div class="container mx-auto flex items-center justify-center gap-3 flex-wrap">
+    {icon && <span aria-hidden="true">{icon}</span>}
+    <span><slot /></span>
+    {ctaText && ctaLink && (
+      <a href={ctaLink} class="underline font-semibold hover:opacity-80 transition-opacity">
+        {ctaText} →
+      </a>
+    )}
+  </div>
+</div>

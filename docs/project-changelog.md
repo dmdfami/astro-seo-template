@@ -2,6 +2,62 @@
 
 All notable changes to astro-seo-template are documented here.
 
+## [2.0.0] - 2026-02-16
+
+### UI/UX Pro Max Upgrade (Complete)
+
+#### Phase Completion
+- Phase 1: Premium Component System ✓
+- Phase 2: Design Token OKLCH Palette ✓
+- Phase 3: Typography & Section Rhythm ✓
+- Phase 4: Glass Morphism & Gradients ✓
+- Phase 5: Bento Layouts & Image Fallbacks ✓
+- Phase 6: Content Beautification Framework ✓
+- Phase 7: Component Catalog Documentation ✓
+
+#### Added
+- **Premium Components** (6): Highlight, FloatingBadge, BentoGrid/BentoItem, ImageWithFallback, DividerLine
+- **Utility Components** (11): Alert, Banner, Blockquote, List, Logo, Metric, Pagination, PricingCard, Quote, Table, and more
+- **64 Total Auto-Imported Components** across 6 categories (Premium, Content, Utility, Data, Product, Social)
+- **OKLCH Color System:**
+  - Primary: Teal (#178 hue, 0-13% chroma)
+  - Secondary: Blue-grey (#240 hue, 0-11% chroma)
+  - Accent: Amber (#75 hue, 4-19% chroma)
+  - Neutral: Stone hex values
+- **Typography System:** heading-hero through heading-small + body/prose styles
+- **Section Rhythm Utilities:** section-compact (4.5rem), section-standard (6rem), section-spacious (7.5rem)
+- **Glass Morphism CSS Variables:** --glass-bg, --glass-blur, --glass-border
+- **Gradient System:** Primary, secondary, accent gradients for buttons and backgrounds
+- **Component Catalog** (docs/component-catalog.md) as contract between template and ai-content-rewriter
+
+#### Changed
+- **Removed Dark Mode:** Eliminated all `.dark` selectors, reduced CSS size ~10%
+- **Color Tokens:** Migrated from HSL to OKLCH for perceptually uniform scales
+- **Component Patterns:** All components use design-token colors (no hardcoded values)
+- **Spacing:** Switched to section-rhythm utilities instead of inline padding
+- **Headings:** Use heading-* utility classes instead of inline text sizes
+
+#### Removed
+- Dark mode toggle component
+- Dark mode CSS variables and `.dark` selectors
+- All `dark:` Tailwind prefixes throughout codebase
+- Dynamic theme preference localStorage logic
+
+#### Component Improvements
+- All interactive components: consistent rounded-xl, shadow transitions
+- Buttons: gradient backgrounds with hover elevation
+- Cards: shadow-sm→shadow-lg on hover, rounded-lg baseline
+- Images: automatic fallback handling via ImageWithFallback
+- Tables: redesigned with prose typography, responsive stacking
+- Forms: 44px touch targets, focus-visible outlines
+
+#### Files Changed
+- 37 modified | 6 new components
+- Build: 19 pages, ~1.2s, 0 errors
+- Breaking: dark mode toggle removed (update layout imports)
+
+---
+
 ## [1.1.0] - 2026-02-16
 
 ### Template Pipeline Alignment (Complete)

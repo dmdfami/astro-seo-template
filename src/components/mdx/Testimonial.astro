@@ -28,9 +28,9 @@ const resolvedAvatar = avatar || image;
 const hasSlot = Astro.slots.has('default');
 ---
 
-<div class={cn('bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl p-8', className)}>
+<div class={cn('bg-gradient-to-br from-primary-50 to-secondary-50 border border-primary-100 rounded-2xl p-8', className)}>
   <div class="flex items-center gap-1 mb-4">
-    <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="currentColor" viewBox="0 0 24 24">
+    <svg class="w-16 h-16 text-primary-200" fill="currentColor" viewBox="0 0 24 24">
       <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
     </svg>
   </div>
@@ -39,7 +39,7 @@ const hasSlot = Astro.slots.has('default');
     <div class="flex gap-1 mb-4">
       {[...Array(5)].map((_, i) => (
         <svg
-          class={cn('w-5 h-5', i < rating ? 'text-yellow-400' : 'text-neutral-300 dark:text-neutral-700')}
+          class={cn('w-5 h-5', i < rating ? 'text-yellow-400' : 'text-neutral-300')}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -49,7 +49,7 @@ const hasSlot = Astro.slots.has('default');
     </div>
   )}
 
-  <blockquote class="text-lg text-neutral-700 dark:text-neutral-300 mb-6">
+  <blockquote class="text-lg text-neutral-700 mb-6">
     {hasSlot ? <slot /> : `"${quote}"`}
   </blockquote>
 
@@ -60,20 +60,20 @@ const hasSlot = Astro.slots.has('default');
         alt={author}
         width={48}
         height={48}
-        class="rounded-full"
+        class="rounded-full border-2 border-white shadow-lg"
       />
     ) : (
-      <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
-        <span class="text-lg font-bold text-primary-600 dark:text-primary-400">
+      <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
+        <span class="text-lg font-bold text-primary-600">
           {author.charAt(0).toUpperCase()}
         </span>
       </div>
     )}
     <div>
-      <div class="font-bold text-neutral-900 dark:text-white">
+      <div class="font-bold text-neutral-900">
         {author}
       </div>
-      <div class="text-sm text-neutral-600 dark:text-neutral-400">
+      <div class="text-sm text-neutral-600">
         {role}{company && ` at ${company}`}
       </div>
     </div>

@@ -1,0 +1,38 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  fallback?: string;
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  fallback = '/images/fallback-placeholder.svg',
+  class: additionalClass = ''
+} = Astro.props;
+---
+
+<div class={`relative overflow-hidden bg-neutral-100 rounded-lg ${additionalClass}`}>
+  <div
+    class="absolute inset-0 bg-gradient-to-r from-neutral-100 via-neutral-50 to-neutral-100
+           animate-shimmer bg-[length:200%_100%]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading="lazy"
+    class="relative z-10 w-full h-full object-cover"
+    onerror={`this.onerror=null; this.src='${fallback}';`}
+  />
+</div>

@@ -1,0 +1,35 @@
+---
+interface Props {
+  value: string;
+  label: string;
+  trend?: 'up' | 'down' | 'neutral';
+  icon?: string;
+}
+
+const { value, label, trend, icon } = Astro.props;
+
+const trendClasses = {
+  up: 'text-green-600',
+  down: 'text-red-600',
+  neutral: 'text-neutral-500'
+};
+
+const trendIcons = {
+  up: '↑',
+  down: '↓',
+  neutral: '→'
+};
+---
+
+<div class="bg-white rounded-xl border border-neutral-200 p-6 text-center shadow-sm hover:shadow-md transition-shadow">
+  {icon && <div class="text-3xl mb-2">{icon}</div>}
+  <div class="text-3xl font-bold text-primary-600 mb-1">
+    {value}
+    {trend && (
+      <span class={`text-sm ml-1 ${trendClasses[trend]}`}>
+        {trendIcons[trend]}
+      </span>
+    )}
+  </div>
+  <div class="text-sm text-neutral-500">{label}</div>
+</div>

@@ -15,7 +15,7 @@ const currentPath = Astro.url.pathname;
 
   <div
     id="mobile-menu"
-    class="fixed inset-0 z-50 bg-white dark:bg-neutral-950 transform translate-x-full transition-transform duration-300 md:hidden"
+    class="fixed inset-0 z-50 bg-white transform translate-x-full transition-transform duration-300 md:hidden"
   >
     <div class="flex justify-end p-4">
       <Button variant="icon" id="mobile-menu-close">
@@ -29,8 +29,8 @@ const currentPath = Astro.url.pathname;
           class:list={[
             'block text-lg font-medium',
             currentPath === link.href
-              ? 'text-primary-600 dark:text-primary-400'
-              : 'text-neutral-900 dark:text-neutral-100'
+              ? 'text-primary-600'
+              : 'text-neutral-900'
           ]}
         >
           {link.label}
@@ -71,7 +71,6 @@ const currentPath = Astro.url.pathname;
 
     if (closeBtn) closeBtn.addEventListener('click', closeMenu);
 
-    // Close on link click
     menu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', closeMenu);
     });

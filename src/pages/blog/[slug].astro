@@ -48,19 +48,19 @@ const url = `${Astro.site}blog/${post.id}`;
 
       <article class="py-8">
         <header class="mb-8">
-          <h1 data-pagefind-meta="title" class="text-4xl lg:text-5xl font-bold font-heading mb-4">
+          <h1 data-pagefind-meta="title" class="heading-hero mb-4">
             {post.data.title}
           </h1>
-          <p class="text-xl text-neutral-600 dark:text-neutral-400 mb-4">
+          <p class="text-xl text-neutral-600 mb-4">
             {post.data.description}
           </p>
-          <div class="flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-500">
+          <div class="flex items-center gap-4 text-sm text-neutral-500">
             <time datetime={post.data.publishDate.toISOString()}>
               {formatDate(post.data.publishDate)}
             </time>
             <div class="flex gap-2">
               {post.data.tags?.map((tag: string) => (
-                <a href={`/blog/tag/${tag}`} class="text-primary-600 dark:text-primary-400 hover:underline">
+                <a href={`/blog/tag/${tag}`} class="text-primary-600 hover:underline">
                   #{tag}
                 </a>
               ))}
@@ -68,7 +68,7 @@ const url = `${Astro.site}blog/${post.id}`;
           </div>
         </header>
 
-        <div class="prose dark:prose-invert max-w-none">
+        <div class="prose max-w-none">
           <Content />
         </div>
       </article>

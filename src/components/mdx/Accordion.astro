@@ -18,16 +18,16 @@ const hasSlot = Astro.slots.has('default');
     <slot />
   ) : (
     items.map((item, index) => (
-      <div class="border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden">
+      <div class="border border-neutral-200 rounded-lg overflow-hidden hover:border-primary-300 transition-colors">
         <button
           type="button"
-          class="accordion-trigger w-full px-6 py-4 text-left font-medium text-neutral-900 dark:text-white hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors flex items-center justify-between"
+          class="accordion-trigger w-full px-6 py-4 text-left font-medium text-neutral-900 hover:bg-neutral-50 transition-colors flex items-center justify-between"
           aria-expanded="false"
           aria-controls={`accordion-panel-${index}`}
         >
           <span>{item.title}</span>
           <svg
-            class="accordion-icon w-5 h-5 transition-transform text-neutral-600 dark:text-neutral-400"
+            class="accordion-icon w-5 h-5 transition-transform text-neutral-600"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -40,7 +40,7 @@ const hasSlot = Astro.slots.has('default');
           class="accordion-panel overflow-hidden transition-all duration-300 max-h-0"
           role="region"
         >
-          <div class="px-6 py-4 text-neutral-600 dark:text-neutral-400">
+          <div class="px-6 py-4 text-neutral-600">
             {item.content}
           </div>
         </div>

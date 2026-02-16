@@ -42,8 +42,8 @@ const platformIcons: Record<string, string> = {
         target="_blank"
         rel="noopener noreferrer"
         class={cn(
-          'inline-flex items-center justify-center rounded-full transition-colors',
-          'text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400',
+          'inline-flex items-center justify-center rounded-full transition-all duration-300 hover:shadow-md hover:-translate-y-1',
+          'text-neutral-600 hover:text-primary-600',
           sizes[size]
         )}
         aria-label={`Follow us on ${platform}`}
@@ -58,8 +58,8 @@ const platformIcons: Record<string, string> = {
         target="_blank"
         rel="noopener noreferrer"
         class={cn(
-          'inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-800',
-          'text-neutral-900 dark:text-white hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors'
+          'inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-200 shadow-sm',
+          'text-neutral-900 hover:bg-neutral-50 hover:shadow-md hover:border-primary-300 transition-all duration-300'
         )}
       >
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

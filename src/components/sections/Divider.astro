@@ -9,8 +9,8 @@ interface Props {
 const { variant = 'solid', class: className } = Astro.props;
 
 const variants: Record<string, string> = {
-  solid: 'border-t border-neutral-200 dark:border-neutral-800',
-  dashed: 'border-t border-dashed border-neutral-300 dark:border-neutral-700',
+  solid: 'border-t border-neutral-200',
+  dashed: 'border-t border-dashed border-neutral-300',
   gradient: 'h-px bg-gradient-to-r from-transparent via-primary-500 to-transparent',
 };
 

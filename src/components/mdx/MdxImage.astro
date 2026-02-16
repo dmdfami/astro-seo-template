@@ -35,11 +35,11 @@ const imageId = `img-${Math.random().toString(36).substr(2, 9)}`;
     width={width}
     height={height}
     loading={lazy ? 'lazy' : 'eager'}
-    class={cn('rounded-lg w-full h-auto', lightbox && 'cursor-pointer')}
+    class={cn('rounded-xl w-full h-auto shadow-sm', lightbox && 'cursor-pointer hover:shadow-md transition-shadow duration-300')}
     data-lightbox={lightbox ? 'true' : 'false'}
   />
   {caption && (
-    <figcaption class="mt-2 text-sm text-center text-neutral-600 dark:text-neutral-400">
+    <figcaption class="mt-2 text-sm text-center text-neutral-600">
       {caption}
     </figcaption>
   )}
@@ -56,7 +56,7 @@ const imageId = `img-${Math.random().toString(36).substr(2, 9)}`;
           const fullImg = document.createElement('img');
           fullImg.src = img.src;
           fullImg.alt = img.alt;
-          fullImg.className = 'max-w-full max-h-full rounded-lg';
+          fullImg.className = 'max-w-full max-h-full rounded-xl';
 
           const closeBtn = document.createElement('button');
           closeBtn.className = 'absolute top-4 right-4 text-white text-4xl hover:text-neutral-300';

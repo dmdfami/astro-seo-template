@@ -1,0 +1,33 @@
+---
+interface Props {
+  variant?: 'check' | 'arrow' | 'number' | 'bullet';
+  items: string[];
+}
+
+const { variant = 'bullet', items } = Astro.props;
+
+const iconMap = {
+  check: '✓',
+  arrow: '→',
+  number: '',
+  bullet: '•'
+};
+
+const iconColorClass = {
+  check: 'text-primary-600',
+  arrow: 'text-primary-500',
+  number: 'text-primary-600 font-semibold',
+  bullet: 'text-neutral-400'
+};
+---
+
+<ul class="space-y-3 my-4">
+  {items.map((item, i) => (
+    <li class="flex items-start gap-3">
+      <span class={`flex-shrink-0 mt-0.5 ${iconColorClass[variant]}`}>
+        {variant === 'number' ? `${i + 1}.` : iconMap[variant]}
+      </span>
+      <span class="text-neutral-700">{item}</span>
+    </li>
+  ))}
+</ul>

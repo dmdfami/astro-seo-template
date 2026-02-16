@@ -24,11 +24,11 @@ const gridCols = {
 
 <div class={cn('grid gap-8', gridCols[cols])}>
   {items.map((item) => (
-    <div class="text-center">
-      <div class={cn('text-4xl lg:text-5xl font-bold text-primary-600 dark:text-primary-400 mb-2', animated && 'stat-value')}>
+    <div class="bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow duration-300 p-6 text-center">
+      <div class={cn('text-3xl font-bold text-primary-600 mb-2', animated && 'stat-value')}>
         {item.value}
       </div>
-      <div class="text-lg text-neutral-600 dark:text-neutral-400">
+      <div class="text-lg text-neutral-600">
         {item.label}
       </div>
     </div>

@@ -48,7 +48,7 @@
     "whatsapp": "https://wa.me/84975807426"
   },
   "features": {
-    "darkMode": true,
+    "darkMode": false,
     "search": true,
     "blog": true,
     "products": true,

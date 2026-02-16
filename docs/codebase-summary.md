@@ -2,15 +2,16 @@
 
 ## Project Overview
 
-**astro-seo-template** is a premium, reusable Astro 5 template built for high-performance content sites. It features zero brand hardcode, 44 auto-imported MDX components, and enterprise-grade SEO infrastructure. Designed to integrate with the `web-cloner → ai-content-rewriter → astro-seo-template` pipeline.
+**astro-seo-template** is a premium, reusable Astro 5 template built for high-performance content sites. It features zero brand hardcode, 64 auto-imported MDX components organized into 6 categories, and enterprise-grade SEO infrastructure. Designed to integrate with the `web-cloner → ai-content-rewriter → astro-seo-template` pipeline.
 
 **Core Tech Stack:**
 - Astro 5 (static output for Cloudflare Pages)
 - Tailwind CSS 4 via `@tailwindcss/vite`
-- MDX for rich content (44 auto-imported components)
+- MDX for rich content (64 auto-imported components)
 - Schema.org JSON-LD (3-tier structured data)
 - Pagefind (full-text search)
 - View Transitions with ClientRouter
+- OKLCH color system (no dark mode)
 
 ## Directory Structure
 
@@ -124,28 +125,27 @@ Each product displays:
 
 Each page supports optional `pipelineFields` for ai-content-rewriter integration, enabling dynamic component orchestration while maintaining backward compatibility with static template content.
 
-## Component Library (44 MDX Components)
+## Component Library (64 MDX Components)
 
-All components are **auto-imported** via `astro-auto-import`. No import statements needed in MDX.
+All components are **auto-imported** via `astro-auto-import`. No import statements needed in MDX. Components organized into 6 functional categories.
 
-**7 Core Components Now Support Dual-API** (v1.1): Hero, AuthorBox, TOC, Callout, CTA, CTABlock, FAQ
-- **Template API:** Direct MDX props (original behavior, backward compatible)
-- **Pipeline API:** Rewriter pipeline integration fields (new workflow support)
+**Premium Components** (6): Highlight, FloatingBadge, BentoGrid, BentoItem, ImageWithFallback, DividerLine
+- Create visual hierarchy and emotional impact
+- Use sparingly for high-value content
 
-### Content Components
-Hero, AuthorBox, TOC, Callout, CTA, CTABlock, Stats, Steps, FAQ, Newsletter, LogoCloud, MdxImage
+**Content & Layout Components** (10): Hero, AuthorBox, TOC, Callout, CTA, CTABlock, Stats, Steps, FAQ, Newsletter
+- Structured content delivery
 
-### Data & Interactive
-CardGrid, Card, Testimonial, ComparisonTable, Tabs, PricingTable, Accordion, Modal, Tooltip, Drawer
+**Utility Components** (11): Alert, Banner, Blockquote, DividerLine, List, Logo, Metric, Pagination, PricingCard, Quote, Table
+- Reusable building blocks for any content
 
-### Product & Visual
-SpecTable, Gallery, BeforeAfter, Counter, ProgressBar, CertBadges, FeatureGrid, ProcessFlow, StarRating, ReviewCard, PriceRange
+**Data & Interactive Components** (18): Card, CardGrid, Testimonial, ComparisonTable, Tabs, PricingTable, Accordion, Modal, Tooltip, Drawer, FeatureGrid, Tabs, Toggle, Slider, Filter, Sort, Search, Embed
+- Engagement and interaction
 
-### Social & Trust
-SocialLinks, TrustBar, ClientLogos, WhatsAppButton, FloatingCTA, VideoEmbed, ContactForm, ScrollReveal, Timeline, TeamGrid
+**Product & Visual Components** (12): SpecTable, Gallery, BeforeAfter, Counter, ProgressBar, CertBadges, ProcessFlow, StarRating, ReviewCard, PriceRange, ProductShowcase, VariantSelector
+- Product-specific layouts
 
-### New Utility Wrappers (v1.1)
-Badge, BreadcrumbNav, Image
+**Social & Trust Components** (7): SocialLinks, TrustBar, ClientLogos, WhatsAppButton, VideoEmbed, ContactForm, Timeline
 
 ## SEO Infrastructure
 
@@ -168,26 +168,34 @@ Badge, BreadcrumbNav, Image
 
 ### Design Token Pipeline
 ```
-design-tokens.json
+design-tokens.json (source of truth)
     ↓
 scripts/generate-theme.mjs (prebuild)
     ↓
 src/styles/theme.css (@theme directive)
     ↓
 src/styles/global.css (@import tailwindcss + theme.css)
+    ↓
+Component utilities (bg-primary-50, text-heading-hero, etc.)
 ```
 
-### Tailwind CSS 4 Integration
-- `@tailwindcss/vite` plugin in Astro config
-- `@import "tailwindcss"` in global.css
-- CSS custom properties via `@theme { --var: value; }`
-- Utility-first workflow with design tokens
+### OKLCH Color System
+- **Primary:** Teal (#178 hue, 0-13% chroma across 50-950 shades)
+- **Secondary:** Blue-grey (#240 hue, 0-11% chroma)
+- **Accent:** Amber (#75 hue, 4-19% chroma)
+- **Neutral:** Stone (hex values, no hue)
+- All colors use OKLCH for perceptually uniform scales
 
-### Dark Mode
-- **Implementation:** Class-based `.dark` selector
-- **Toggle:** localStorage `theme-preference` (light/dark/system)
-- **System Detection:** `prefers-color-scheme` media query fallback
-- **Runtime Swap:** CSS custom variables for glass, gradients in `.dark`
+### Typography System
+- **Heading hierarchy:** `heading-hero`, `heading-xl`, `heading-lg`, `heading-md`, `heading-sm`
+- **Body text:** `text-base`, `text-sm`, `text-lg`, `text-xl`
+- **Section rhythm:** `section-compact` (4.5rem), `section-standard` (6rem), `section-spacious` (7.5rem)
+- **Prose styles:** Auto-applied to long-form content via `.prose` class
+
+### No Dark Mode
+- Simplified codebase (all dark: prefixes removed)
+- Single light theme with high accessibility contrast
+- Reduces CSS size and maintenance overhead
 
 ## Deployment Model
 

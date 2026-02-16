@@ -12,16 +12,16 @@ const { headers, rows, highlightCol } = Astro.props;
 
 <div class="overflow-x-auto -mx-4 sm:mx-0">
   <div class="inline-block min-w-full align-middle">
-    <div class="overflow-hidden border border-neutral-200 dark:border-neutral-800 rounded-lg">
-      <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-800">
-        <thead class="bg-neutral-50 dark:bg-neutral-900 sticky top-0">
+    <div class="overflow-hidden border border-neutral-200 rounded-xl shadow-sm">
+      <table class="min-w-full divide-y divide-neutral-200">
+        <thead class="bg-neutral-50 sticky top-0">
           <tr>
             {headers.map((header, index) => (
               <th
                 scope="col"
                 class={cn(
-                  'px-6 py-4 text-left text-sm font-bold text-neutral-900 dark:text-white',
-                  highlightCol === index && 'bg-primary-50 dark:bg-primary-950'
+                  'px-6 py-4 text-left text-sm font-bold text-neutral-900',
+                  highlightCol === index && 'bg-primary-50'
                 )}
               >
                 {header}
@@ -29,14 +29,14 @@ const { headers, rows, highlightCol } = Astro.props;
             ))}
           </tr>
         </thead>
-        <tbody class="bg-white dark:bg-neutral-950 divide-y divide-neutral-200 dark:divide-neutral-800">
+        <tbody class="bg-white divide-y divide-neutral-200">
           {rows.map((row) => (
             <tr>
               {row.map((cell, index) => (
                 <td
                   class={cn(
-                    'px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400',
-                    highlightCol === index && 'bg-primary-50 dark:bg-primary-950 font-medium'
+                    'px-6 py-4 text-sm text-neutral-600',
+                    highlightCol === index && 'bg-primary-50 font-medium'
                   )}
                 >
                   {cell}

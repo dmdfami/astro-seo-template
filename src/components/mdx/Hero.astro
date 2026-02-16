@@ -56,13 +56,13 @@ const resolvedVariant = variant || (align === 'center' ? 'centered' : 'default')
 const bgOpacity = backgroundImage?.opacity ?? 0.3;
 
 const backgrounds = {
-  gradient: 'bg-gradient-to-br from-primary-600 to-secondary-500 text-white',
+  gradient: 'bg-gradient-to-br from-primary-50 to-secondary-50',
   solid: 'bg-primary-600 text-white',
   none: 'bg-transparent',
 };
 ---
 
-<section class={cn('relative py-20 lg:py-32 overflow-hidden', backgrounds[background])}>
+<section class={cn('relative py-24 md:py-32 overflow-hidden', backgrounds[background])}>
   {/* Background image with configurable opacity */}
   {backgroundImage && (
     <div class="absolute inset-0 z-0">
@@ -82,30 +82,30 @@ const backgrounds = {
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <div>
           {badges && (
-            <p class="text-sm font-semibold uppercase tracking-wider text-primary-400 mb-4">{badges}</p>
+            <p class="text-sm font-semibold uppercase tracking-wider text-primary-600 mb-4">{badges}</p>
           )}
-          <h1 class="text-4xl lg:text-6xl font-bold font-heading mb-6">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-neutral-900 mb-6">
             {title}
           </h1>
           {subtitle && (
-            <p class="text-xl lg:text-2xl opacity-90 mb-8">{subtitle}</p>
+            <p class="text-xl lg:text-2xl text-neutral-600 mb-8">{subtitle}</p>
           )}
           {resolvedCta && (
             <div class="flex flex-wrap gap-4">
               {resolvedCta.primary && (
-                <Button href={resolvedCta.primary.url} variant="secondary" size="lg">
+                <Button href={resolvedCta.primary.url} variant="primary" size="lg" class="bg-gradient-to-r from-primary-600 to-primary-500 text-white px-8 py-4 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                   {resolvedCta.primary.text}
                 </Button>
               )}
               {resolvedCta.secondary && (
-                <Button href={resolvedCta.secondary.url} variant="outline" size="lg">
+                <Button href={resolvedCta.secondary.url} variant="outline" size="lg" class="px-8 py-4 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                   {resolvedCta.secondary.text}
                 </Button>
               )}
             </div>
           )}
           {trustItems && (
-            <div class="mt-6 flex flex-wrap items-center gap-6 text-sm opacity-80">
+            <div class="mt-6 flex flex-wrap items-center gap-6 text-sm text-neutral-600">
               {trustItems.map((item) => <span>{item}</span>)}
             </div>
           )}
@@ -117,7 +117,7 @@ const backgrounds = {
               alt={resolvedImage.alt}
               width={600}
               height={400}
-              class="rounded-xl shadow-2xl"
+              class="rounded-2xl shadow-lg"
             />
           </div>
         )}
@@ -125,30 +125,30 @@ const backgrounds = {
     ) : (
       <div class={cn('max-w-4xl mx-auto', resolvedVariant === 'centered' && 'text-center')}>
         {badges && (
-          <p class={cn('text-sm font-semibold uppercase tracking-wider mb-4', backgroundImage ? 'text-primary-300' : 'text-primary-400')}>{badges}</p>
+          <p class={cn('text-sm font-semibold uppercase tracking-wider mb-4', backgroundImage ? 'text-primary-300' : 'text-primary-600')}>{badges}</p>
         )}
-        <h1 class="text-4xl lg:text-6xl font-bold font-heading mb-6">
+        <h1 class={cn('text-4xl md:text-5xl lg:text-6xl font-bold font-heading mb-6', backgroundImage ? 'text-white' : 'text-neutral-900')}>
           {title}
         </h1>
         {subtitle && (
-          <p class="text-xl lg:text-2xl opacity-90 mb-8">{subtitle}</p>
+          <p class={cn('text-xl lg:text-2xl mb-8', backgroundImage ? 'text-white/90' : 'text-neutral-600')}>{subtitle}</p>
         )}
         {resolvedCta && (
           <div class={cn('flex flex-wrap gap-4', resolvedVariant === 'centered' && 'justify-center')}>
             {resolvedCta.primary && (
-              <Button href={resolvedCta.primary.url} variant="secondary" size="lg">
+              <Button href={resolvedCta.primary.url} variant="primary" size="lg" class="bg-gradient-to-r from-primary-600 to-primary-500 text-white px-8 py-4 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                 {resolvedCta.primary.text}
               </Button>
             )}
             {resolvedCta.secondary && (
-              <Button href={resolvedCta.secondary.url} variant="outline" size="lg">
+              <Button href={resolvedCta.secondary.url} variant="outline" size="lg" class="px-8 py-4 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                 {resolvedCta.secondary.text}
               </Button>
             )}
           </div>
         )}
         {trustItems && (
-          <div class={cn('mt-6 flex flex-wrap items-center gap-6 text-sm opacity-80', resolvedVariant === 'centered' && 'justify-center')}>
+          <div class={cn('mt-6 flex flex-wrap items-center gap-6 text-sm', backgroundImage ? 'text-white/80' : 'text-neutral-600', resolvedVariant === 'centered' && 'justify-center')}>
             {trustItems.map((item) => <span>{item}</span>)}
           </div>
         )}

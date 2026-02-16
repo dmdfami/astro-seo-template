@@ -12,8 +12,8 @@ const currentPath = Astro.url.pathname;
       class:list={[
         'text-sm font-medium transition-colors',
         currentPath === link.href
-          ? 'text-primary-600 dark:text-primary-400'
-          : 'text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400'
+          ? 'text-primary-600'
+          : 'text-neutral-700 hover:text-primary-600'
       ]}
     >
       {link.label}

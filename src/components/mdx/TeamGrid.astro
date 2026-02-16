@@ -23,7 +23,7 @@ const { members, class: className } = Astro.props;
 
 <div class={cn('grid md:grid-cols-2 lg:grid-cols-3 gap-8', className)}>
   {members.map((member) => (
-    <div class="team-member group relative overflow-hidden rounded-xl bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800">
+    <div class="team-member group relative overflow-hidden rounded-xl bg-white border border-neutral-200 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-primary-300 transition-all duration-300">
       <div class="aspect-square overflow-hidden">
         <Image
           src={member.image}
@@ -34,13 +34,13 @@ const { members, class: className } = Astro.props;
         />
       </div>
       <div class="p-6">
-        <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-1">
+        <h3 class="text-xl font-bold text-neutral-900 mb-1">
           {member.name}
         </h3>
-        <p class="text-sm text-primary-600 dark:text-primary-400 mb-3">
+        <p class="text-sm text-primary-600 mb-3">
           {member.role}
         </p>
-        <p class="text-neutral-600 dark:text-neutral-400 text-sm mb-4">
+        <p class="text-neutral-600 text-sm mb-4">
           {member.bio}
         </p>
         {member.social && member.social.length > 0 && (
@@ -50,7 +50,7 @@ const { members, class: className } = Astro.props;
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                class="text-neutral-600 hover:text-primary-600 transition-colors"
                 aria-label={`${member.name} on ${link.platform}`}
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
