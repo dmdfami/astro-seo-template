@@ -1,28 +1,45 @@
 {
   "organization": {
-    "name": "Example Corp",
-    "url": "https://example.com",
-    "logo": "https://example.com/logo.png",
+    "name": "HC PLYWOOD CO LTD",
+    "url": "https://vietnam-plywood.com",
+    "logo": "https://vietnam-plywood.com/images/uploads/image-v1w/logo/hcply-logo-vietnam-plywood-export-branding-001-300x300.webp",
     "sameAs": [
-      "https://twitter.com/example",
-      "https://linkedin.com/company/example",
-      "https://facebook.com/example"
+      "https://linkedin.com/company/vietnam-plywood",
+      "https://facebook.com/hcplyvietnamplywood",
+      "https://youtube.com/@vietnam-plywood",
+      "https://x.com/hcplyvietnam",
+      "https://instagram.com/vietnamplywood",
+      "https://pinterest.com/vietnam_plywood"
     ],
     "contactPoint": {
-      "telephone": "+1-234-567-8900",
-      "contactType": "customer service",
-      "areaServed": "US",
-      "availableLanguage": "en"
+      "telephone": "+84-975-807-426",
+      "contactType": "sales",
+      "areaServed": ["IN", "AE", "KR", "DE", "MY", "PH", "MX", "BR"],
+      "availableLanguage": ["en", "vi", "hi"]
     }
   },
   "website": {
-    "name": "Example Corp",
-    "url": "https://example.com"
+    "name": "Vietnam Plywood - HCPLY",
+    "url": "https://vietnam-plywood.com"
   },
   "authors": {
     "default": {
-      "name": "Example Team",
-      "url": "https://example.com/about"
+      "name": "HCPLY Team",
+      "url": "https://vietnam-plywood.com/about"
+    },
+    "lucy": {
+      "name": "Lucy",
+      "url": "https://lucyvietnam.com",
+      "role": "International Sales Manager",
+      "image": "/images/team/lucy-avatar.webp",
+      "sameAs": ["https://linkedin.com/in/lucy-hcply"]
+    },
+    "david": {
+      "name": "David",
+      "url": "https://vietnam-plywood.com/contact",
+      "role": "Export Project Leader",
+      "image": "/images/team/david-avatar.webp",
+      "sameAs": ["https://linkedin.com/in/david-hcply"]
     }
   }
 }

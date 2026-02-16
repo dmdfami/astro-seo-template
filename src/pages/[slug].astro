@@ -6,10 +6,16 @@ import Footer from '@components/layout/Footer.astro';
 import Container from '@components/sections/Container.astro';
 import Section from '@components/sections/Section.astro';
 import Breadcrumb from '@components/seo/Breadcrumb.astro';
+import SchemaRenderer from '@components/seo/SchemaRenderer.astro';
+
+// Content types that get full-width MDX rendering (no prose wrapper)
+const FULL_WIDTH_TYPES = ['landing', 'gallery', 'video-hub'];
+// Content types that get product-style layout
+const PRODUCT_TYPES = ['product'];
 
 export async function getStaticPaths() {
   const pages = await getCollection('pages', ({ data }) =>
-    !data.draft && data.contentType === 'generic'
+    !data.draft && data.contentType !== 'homepage'
   );
   return pages.map(page => ({
     params: { slug: page.id },
@@ -19,26 +25,85 @@ export async function getStaticPaths() {
 
 const { page } = Astro.props;
 const { Content } = await render(page);
+const { contentType } = page.data;
+const isFullWidth = FULL_WIDTH_TYPES.includes(contentType);
+const isProduct = PRODUCT_TYPES.includes(contentType);
+const url = `${Astro.site}${page.id}`;
 ---
 
-<BaseLayout title={page.data.title} description={page.data.description}>
+<BaseLayout
+  title={page.data.title}
+  description={page.data.description}
+  image={page.data.image?.src}
+  type={isProduct ? 'product' : 'website'}
+  ogTitle={page.data.ogTitle}
+  ogDescription={page.data.ogDescription}
+  category={page.data.category}
+>
+  <SchemaRenderer
+    slot="schema"
+    contentType={contentType}
+    frontmatter={page.data}
+    url={url}
+  />
   <Header />
 
-  <Section padding="xl">
-    <Container size="md">
-      <Breadcrumb
-        items={[
+  {isFullWidth ? (
+    <main id="main-content" data-pagefind-body>
+      <Content />
+    </main>
+  ) : isProduct ? (
+    <main id="main-content" data-pagefind-body>
+      <Container>
+        <Breadcrumb items={[
           { label: 'Home', href: '/' },
           { label: page.data.title }
-        ]}
-      />
-
-      <article class="prose dark:prose-invert max-w-none" data-pagefind-body>
-        <h1>{page.data.title}</h1>
-        <Content />
-      </article>
-    </Container>
-  </Section>
+        ]} />
+        <div class="grid lg:grid-cols-2 gap-12 py-8 mb-12">
+          <div>
+            {page.data.image && (
+              <img src={page.data.image.src} alt={page.data.image.alt}
+                class="rounded-xl w-full" loading="lazy" />
+            )}
+          </div>
+          <div>
+            <h1 class="text-4xl font-bold font-heading mb-4">{page.data.title}</h1>
+            <p class="text-xl text-neutral-600 dark:text-neutral-400 mb-6">
+              {page.data.description}
+            </p>
+            {page.data.specs && (
+              <div class="border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden">
+                <table class="w-full text-sm">
+                  {Object.entries(page.data.specs).map(([key, value]) => (
+                    <tr class="border-b border-neutral-200 dark:border-neutral-800 last:border-b-0">
+                      <td class="px-4 py-3 font-medium bg-neutral-50 dark:bg-neutral-900 w-1/3 capitalize">{key}</td>
+                      <td class="px-4 py-3">{value}</td>
+                    </tr>
+                  ))}
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+        <div class="prose dark:prose-invert max-w-none">
+          <Content />
+        </div>
+      </Container>
+    </main>
+  ) : (
+    <Section padding="xl">
+      <Container size="md">
+        <Breadcrumb items={[
+          { label: 'Home', href: '/' },
+          { label: page.data.title }
+        ]} />
+        <article class="prose dark:prose-invert max-w-none" id="main-content" data-pagefind-body>
+          <h1>{page.data.title}</h1>
+          <Content />
+        </article>
+      </Container>
+    </Section>
+  )}
 
   <Footer />
 </BaseLayout>

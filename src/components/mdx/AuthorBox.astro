@@ -11,10 +11,24 @@ interface Props {
   name: string;
   bio: string;
   avatar?: string;
+  image?: string;
+  role?: string;
+  credentials?: string[];
   social?: SocialLink[];
+  // Rewriter flat social props
+  linkedin?: string;
+  twitter?: string;
 }
 
-const { name, bio, avatar, social = [] } = Astro.props;
+const { name, bio, avatar, image, role, credentials, social = [], linkedin, twitter } = Astro.props;
+
+const resolvedAvatar = avatar || image;
+
+// Build social array from flat props if social not provided
+const resolvedSocial = social.length ? social : [
+  ...(linkedin ? [{ platform: 'linkedin' as const, url: linkedin }] : []),
+  ...(twitter ? [{ platform: 'twitter' as const, url: twitter }] : []),
+];
 
 const iconMap = {
   twitter: 'external-link',
@@ -26,10 +40,10 @@ const iconMap = {
 
 <div class="border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 bg-neutral-50 dark:bg-neutral-900">
   <div class="flex items-start gap-4">
-    {avatar && (
+    {resolvedAvatar && (
       <div class="flex-shrink-0">
         <Image
-          src={avatar}
+          src={resolvedAvatar}
           alt={name}
           width={64}
           height={64}
@@ -37,7 +51,7 @@ const iconMap = {
         />
       </div>
     )}
-    {!avatar && (
+    {!resolvedAvatar && (
       <div class="flex-shrink-0 w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
         <span class="text-2xl font-bold text-primary-600 dark:text-primary-400">
           {name.charAt(0).toUpperCase()}
@@ -45,15 +59,25 @@ const iconMap = {
       </div>
     )}
     <div class="flex-1">
-      <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">
+      <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-1">
         {name}
       </h3>
+      {role && (
+        <p class="text-sm text-primary-600 dark:text-primary-400 mb-2">{role}</p>
+      )}
+      {credentials && credentials.length > 0 && (
+        <div class="flex flex-wrap gap-2 mb-2">
+          {credentials.map(c => (
+            <span class="text-xs bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-0.5 rounded-full">{c}</span>
+          ))}
+        </div>
+      )}
       <p class="text-neutral-600 dark:text-neutral-400 mb-3">
         {bio}
       </p>
-      {social.length > 0 && (
+      {resolvedSocial.length > 0 && (
         <div class="flex gap-3">
-          {social.map((link) => (
+          {resolvedSocial.map((link) => (
             <a
               href={link.url}
               class="text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"

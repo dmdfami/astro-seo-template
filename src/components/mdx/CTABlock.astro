@@ -3,52 +3,74 @@ import { cn } from '@lib/utils';
 import Button from '../ui/Button.astro';
 
 interface Props {
-  title: string;
+  // Existing API
+  title?: string;
   description?: string;
   cta?: {
     primary?: { text: string; url: string };
     secondary?: { text: string; url: string };
   };
   background?: 'gradient' | 'solid';
+  // Rewriter API (flat)
+  href?: string;
+  ctaText?: string;
+  variant?: 'primary' | 'secondary' | 'outline';
+  frictionText?: string;
+  socialProof?: string;
+  align?: 'left' | 'center' | 'right';
 }
 
 const {
-  title,
-  description,
-  cta,
-  background = 'gradient'
+  title, description, cta, background = 'gradient',
+  href, ctaText, variant = 'primary', frictionText, socialProof,
+  align = 'center'
 } = Astro.props;
+
+// Normalize: if flat props provided, build cta object
+const resolvedCta = cta || (href && ctaText ? { primary: { text: ctaText, url: href } } : undefined);
 
 const backgrounds = {
   gradient: 'bg-gradient-to-br from-primary-600 to-secondary-500',
   solid: 'bg-primary-600',
 };
+
+const alignments = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+};
 ---
 
 <section class={cn('py-16 lg:py-24 text-white', backgrounds[background])}>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="max-w-3xl mx-auto text-center">
-      <h2 class="text-3xl lg:text-5xl font-bold font-heading mb-6">
-        {title}
-      </h2>
-      {description && (
-        <p class="text-xl opacity-90 mb-8">
-          {description}
-        </p>
+    <div class={cn('max-w-3xl mx-auto', alignments[align])}>
+      {title && (
+        <h2 class="text-3xl lg:text-5xl font-bold font-heading mb-6">
+          {title}
+        </h2>
       )}
-      {cta && (
-        <div class="flex flex-wrap gap-4 justify-center">
-          {cta.primary && (
-            <Button href={cta.primary.url} variant="secondary" size="lg">
-              {cta.primary.text}
+      {description && (
+        <p class="text-xl opacity-90 mb-8">{description}</p>
+      )}
+      {resolvedCta && (
+        <div class={cn('flex flex-wrap gap-4', align === 'center' && 'justify-center')}>
+          {resolvedCta.primary && (
+            <Button href={resolvedCta.primary.url} variant="secondary" size="lg">
+              {resolvedCta.primary.text}
             </Button>
           )}
-          {cta.secondary && (
-            <Button href={cta.secondary.url} variant="outline" size="lg">
-              {cta.secondary.text}
+          {resolvedCta.secondary && (
+            <Button href={resolvedCta.secondary.url} variant="outline" size="lg">
+              {resolvedCta.secondary.text}
             </Button>
           )}
         </div>
+      )}
+      {frictionText && (
+        <p class="mt-4 text-sm opacity-80">{frictionText}</p>
+      )}
+      {socialProof && (
+        <p class="mt-2 text-sm opacity-70">{socialProof}</p>
       )}
     </div>
   </div>

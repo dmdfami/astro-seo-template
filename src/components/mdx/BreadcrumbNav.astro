@@ -1,0 +1,12 @@
+---
+// MDX wrapper for seo/Breadcrumb.astro (named BreadcrumbNav to avoid SEO import conflicts)
+import Breadcrumb from '../seo/Breadcrumb.astro';
+
+interface Props {
+  items: Array<{ label: string; href?: string }>;
+}
+
+const { items } = Astro.props;
+---
+
+<Breadcrumb items={items} />

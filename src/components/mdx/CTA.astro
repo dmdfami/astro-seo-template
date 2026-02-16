@@ -2,21 +2,39 @@
 import Button from '../ui/Button.astro';
 
 interface Props {
+  // Existing API
   primary?: { text: string; url: string };
   secondary?: { text: string; url: string };
   note?: string;
   href?: string;
   variant?: 'primary' | 'secondary' | 'outline';
+  // Rewriter API
+  size?: 'sm' | 'md' | 'lg';
+  description?: string;
+  fullWidth?: boolean;
+  id?: string;
 }
 
-const { primary, secondary, note, href, variant = 'primary' } = Astro.props;
+const {
+  primary, secondary, note, href,
+  variant = 'primary',
+  size = 'lg',
+  description,
+  fullWidth = false,
+  id
+} = Astro.props;
 const hasSlot = Astro.slots.has('default');
 ---
 
 {hasSlot ? (
-  <Button href={href} variant={variant} size="lg">
-    <slot />
-  </Button>
+  <div id={id} class:list={[fullWidth && 'w-full']}>
+    <Button href={href} variant={variant} size={size} class:list={[fullWidth && 'w-full']}>
+      <slot />
+    </Button>
+    {description && (
+      <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">{description}</p>
+    )}
+  </div>
 ) : (
   <div class="flex flex-wrap gap-4 items-center">
     {primary && (

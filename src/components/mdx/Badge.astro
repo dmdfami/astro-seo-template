@@ -1,0 +1,14 @@
+---
+// MDX wrapper for ui/Badge.astro
+import BadgeUI from '../ui/Badge.astro';
+
+interface Props {
+  variant?: 'success' | 'warning' | 'error' | 'info' | 'neutral';
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const props = Astro.props;
+---
+
+<BadgeUI {...props}><slot /></BadgeUI>

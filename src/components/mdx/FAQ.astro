@@ -1,15 +1,23 @@
 ---
 interface FAQItem {
-  q: string;
-  a: string;
+  q?: string;
+  a?: string;
+  question?: string;
+  answer?: string;
 }
 
 interface Props {
   items?: FAQItem[];
 }
 
-const { items = [] } = Astro.props;
+const { items: rawItems = [] } = Astro.props;
 const hasSlot = Astro.slots.has('default');
+
+// Normalize: accept both {q, a} and {question, answer}
+const items = rawItems.map(item => ({
+  q: item.q || item.question || '',
+  a: item.a || item.answer || '',
+}));
 ---
 
 <div class="space-y-4" itemscope itemtype="https://schema.org/FAQPage">

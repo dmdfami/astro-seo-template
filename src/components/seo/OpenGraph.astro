@@ -16,6 +16,10 @@ interface Props {
   modifiedTime?: Date;
   author?: string;
   tags?: string[];
+  // Rewriter overrides
+  ogTitle?: string;
+  ogDescription?: string;
+  category?: string;
 }
 
 const {
@@ -26,7 +30,10 @@ const {
   publishedTime,
   modifiedTime,
   author,
-  tags = []
+  tags = [],
+  ogTitle,
+  ogDescription,
+  category
 } = Astro.props;
 
 const metaTitle = generateMetaTitle(title);
@@ -36,6 +43,10 @@ const ogImage = getOpenGraphImageURL(image);
 const twitterHandle = siteConfig.social.twitter
   ? '@' + siteConfig.social.twitter.split('/').pop()
   : undefined;
+
+// OG uses override if available, otherwise falls back to page meta
+const ogMetaTitle = ogTitle || metaTitle;
+const ogMetaDescription = ogDescription || metaDescription;
 ---
 
 <!-- Primary Meta Tags -->
@@ -46,8 +57,8 @@ const twitterHandle = siteConfig.social.twitter
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={type} />
 <meta property="og:url" content={canonicalURL} />
-<meta property="og:title" content={metaTitle} />
-<meta property="og:description" content={metaDescription} />
+<meta property="og:title" content={ogMetaTitle} />
+<meta property="og:description" content={ogMetaDescription} />
 <meta property="og:image" content={ogImage} />
 <meta property="og:site_name" content={siteConfig.site.name} />
 
@@ -63,12 +74,15 @@ const twitterHandle = siteConfig.social.twitter
 {type === 'article' && tags.map(tag => (
   <meta property="article:tag" content={tag} />
 ))}
+{type === 'article' && category && (
+  <meta property="article:section" content={category} />
+)}
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:url" content={canonicalURL} />
-<meta name="twitter:title" content={metaTitle} />
-<meta name="twitter:description" content={metaDescription} />
+<meta name="twitter:title" content={ogMetaTitle} />
+<meta name="twitter:description" content={ogMetaDescription} />
 <meta name="twitter:image" content={ogImage} />
 {twitterHandle && (
   <meta name="twitter:site" content={twitterHandle} />

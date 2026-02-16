@@ -2,12 +2,17 @@
 import { cn } from '@lib/utils';
 
 interface Props {
-  type?: 'info' | 'warning' | 'success' | 'error';
+  type?: 'info' | 'warning' | 'success' | 'error' | 'tip' | 'note';
   title?: string;
   class?: string;
 }
 
-const { type = 'info', title, class: className } = Astro.props;
+const { type: rawType = 'info', title, class: className } = Astro.props;
+
+// Map rewriter types to template types, fallback to 'info' for unknown
+const typeMap: Record<string, string> = { tip: 'info', note: 'info' };
+const mapped = typeMap[rawType] || rawType;
+const type = (['info', 'warning', 'success', 'error'].includes(mapped) ? mapped : 'info') as 'info' | 'warning' | 'success' | 'error';
 
 const styles = {
   info: 'bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-100',

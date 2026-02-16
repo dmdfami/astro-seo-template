@@ -29,11 +29,14 @@ const url = `${Astro.site}blog/${post.id}`;
   publishedTime={post.data.publishDate}
   author={post.data.author}
   tags={post.data.tags}
+  ogTitle={post.data.ogTitle}
+  ogDescription={post.data.ogDescription}
+  category={post.data.category}
 >
-  <SchemaRenderer contentType="blog" frontmatter={post.data} url={url} />
+  <SchemaRenderer slot="schema" contentType="blog" frontmatter={post.data} url={url} />
   <Header />
 
-  <main data-pagefind-body>
+  <main id="main-content" data-pagefind-body>
     <Container size="md">
       <Breadcrumb
         items={[

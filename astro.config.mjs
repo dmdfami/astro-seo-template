@@ -7,7 +7,7 @@ import pagefind from 'astro-pagefind';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://example.com',
+  site: 'https://vietnam-plywood.com',
   output: 'static',
   vite: {
     plugins: [tailwindcss()],
@@ -63,6 +63,10 @@ export default defineConfig({
         './src/components/mdx/ScrollReveal.astro',
         './src/components/mdx/Timeline.astro',
         './src/components/mdx/TeamGrid.astro',
+        // Pipeline additions
+        './src/components/mdx/Badge.astro',
+        './src/components/mdx/BreadcrumbNav.astro',
+        './src/components/mdx/Image.astro',
       ],
     }),
     mdx(),

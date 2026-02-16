@@ -31,7 +31,7 @@ const variants = {
 };
 ---
 
-<div class={cn('rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1', variants[variant], className)}>
+<div class={cn('rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1', variants[variant], href && 'cursor-pointer', className)}>
   {image && (
     <div class="aspect-video overflow-hidden">
       <Image

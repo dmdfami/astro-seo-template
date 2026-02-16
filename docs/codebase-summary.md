@@ -118,13 +118,19 @@ Each product displays:
 - Related products
 
 ### Pages (`src/content/pages/`)
-**Schema:** title, description, contentType, draft
+**Schema:** title, description, contentType, draft, pipelineFields
 
-Types: `landing` (hero + CTA), `generic` (standard page), `homepage` (custom layout)
+**Content Types:** landing, generic, homepage, about, contact, product, product-list, blog-list, reviews, gallery, video-hub
+
+Each page supports optional `pipelineFields` for ai-content-rewriter integration, enabling dynamic component orchestration while maintaining backward compatibility with static template content.
 
 ## Component Library (44 MDX Components)
 
 All components are **auto-imported** via `astro-auto-import`. No import statements needed in MDX.
+
+**7 Core Components Now Support Dual-API** (v1.1): Hero, AuthorBox, TOC, Callout, CTA, CTABlock, FAQ
+- **Template API:** Direct MDX props (original behavior, backward compatible)
+- **Pipeline API:** Rewriter pipeline integration fields (new workflow support)
 
 ### Content Components
 Hero, AuthorBox, TOC, Callout, CTA, CTABlock, Stats, Steps, FAQ, Newsletter, LogoCloud, MdxImage
@@ -137,6 +143,9 @@ SpecTable, Gallery, BeforeAfter, Counter, ProgressBar, CertBadges, FeatureGrid, 
 
 ### Social & Trust
 SocialLinks, TrustBar, ClientLogos, WhatsAppButton, FloatingCTA, VideoEmbed, ContactForm, ScrollReveal, Timeline, TeamGrid
+
+### New Utility Wrappers (v1.1)
+Badge, BreadcrumbNav, Image
 
 ## SEO Infrastructure
 
@@ -151,8 +160,8 @@ SocialLinks, TrustBar, ClientLogos, WhatsAppButton, FloatingCTA, VideoEmbed, Con
 **Pagefind:** Full-text search index built on `npm run build`; accessible via `/search.astro`
 
 **3-Tier Schema.org JSON-LD:**
-1. **Organization** (site-wide): from `schema-org.json`
-2. **Auto-generated**: BlogPosting, Product, BreadcrumbList per page
+1. **Organization** (site-wide): from `schema-org.json` (enriched with author image/sameAs)
+2. **Auto-generated**: BlogPosting, Product, BreadcrumbList, HowTo per page (fixed breadcrumb Home position, page title for last item)
 3. **Frontmatter**: Custom FAQ, Recipe, Review schemas via frontmatter
 
 ## Theme System

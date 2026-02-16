@@ -3,11 +3,12 @@ import { Image } from 'astro:assets';
 import { cn } from '@lib/utils';
 
 interface Props {
-  quote: string;
+  quote?: string;
   author: string;
   role: string;
   company?: string;
   avatar?: string;
+  image?: string;
   rating?: number;
   class?: string;
 }
@@ -18,9 +19,13 @@ const {
   role,
   company,
   avatar,
+  image,
   rating,
   class: className
 } = Astro.props;
+
+const resolvedAvatar = avatar || image;
+const hasSlot = Astro.slots.has('default');
 ---
 
 <div class={cn('bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl p-8', className)}>
@@ -45,13 +50,13 @@ const {
   )}
 
   <blockquote class="text-lg text-neutral-700 dark:text-neutral-300 mb-6">
-    "{quote}"
+    {hasSlot ? <slot /> : `"${quote}"`}
   </blockquote>
 
   <div class="flex items-center gap-4">
-    {avatar ? (
+    {resolvedAvatar ? (
       <Image
-        src={avatar}
+        src={resolvedAvatar}
         alt={author}
         width={48}
         height={48}

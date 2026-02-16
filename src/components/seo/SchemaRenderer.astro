@@ -3,7 +3,7 @@ import schemaOrg from '../../../schema-org.json';
 import siteConfig from '../../../site-config.json';
 
 interface Props {
-  contentType: 'blog' | 'product' | 'landing' | 'homepage' | 'generic';
+  contentType: 'blog' | 'product' | 'landing' | 'homepage' | 'generic' | 'about' | 'contact' | 'reviews' | 'gallery' | 'video-hub' | 'blog-list' | 'product-list';
   frontmatter: Record<string, any>;
   url: string;
 }
@@ -12,7 +12,7 @@ const { contentType, frontmatter, url } = Astro.props;
 
 function buildSchemas() {
   const schemas: object[] = [];
-  schemas.push(buildBreadcrumb(url));
+  schemas.push(buildBreadcrumb(url, frontmatter.title));
 
   switch (contentType) {
     case 'blog':
@@ -27,27 +27,63 @@ function buildSchemas() {
     schemas.push(buildFAQSchema(frontmatter.faq));
   }
 
+  if (frontmatter.steps?.length) {
+    schemas.push(buildHowToSchema(frontmatter));
+  }
+
   return schemas;
 }
 
-function buildBreadcrumb(pageUrl: string) {
+function buildBreadcrumb(pageUrl: string, pageTitle: string) {
   const parsed = new URL(pageUrl);
   const pathParts = parsed.pathname.replace(/\/$/, '').split('/').filter(Boolean);
   const siteUrl = siteConfig.site.url.replace(/\/$/, '');
+
+  // Always start with Home
+  const items = [
+    {
+      "@type": "ListItem" as const,
+      position: 1,
+      name: "Home",
+      item: siteUrl + "/"
+    }
+  ];
+
+  // Add intermediate segments (if any)
+  pathParts.forEach((part, i) => {
+    const isLast = i === pathParts.length - 1;
+    items.push({
+      "@type": "ListItem" as const,
+      position: i + 2,
+      name: isLast ? pageTitle : part.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+      item: `${siteUrl}/${pathParts.slice(0, i + 1).join('/')}/`
+    });
+  });
+
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: pathParts.map((part, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: part.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
-      item: `${siteUrl}/${pathParts.slice(0, i + 1).join('/')}/`
-    }))
+    itemListElement: items,
   };
 }
 
 function buildArticleSchema(fm: Record<string, any>, pageUrl: string) {
-  const author = (schemaOrg.authors as Record<string, any>)?.[fm.author] || schemaOrg.authors.default;
+  const authorData = (schemaOrg.authors as Record<string, any>)?.[fm.author] || schemaOrg.authors.default;
+
+  const author: Record<string, any> = {
+    "@type": "Person",
+    name: authorData.name,
+    url: authorData.url,
+  };
+
+  // Enrich with optional fields from schema-org.json
+  if (authorData.role) author.jobTitle = authorData.role;
+  if (authorData.image) author.image = authorData.image;
+  if (authorData.sameAs) author.sameAs = authorData.sameAs;
+
+  // Add authorCredentials from frontmatter
+  if (fm.authorCredentials) author.description = fm.authorCredentials;
+
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -56,7 +92,7 @@ function buildArticleSchema(fm: Record<string, any>, pageUrl: string) {
     image: fm.image?.src,
     datePublished: fm.publishDate,
     dateModified: fm.updatedDate || fm.publishDate,
-    author: { "@type": "Person", name: author.name, url: author.url },
+    author,
     publisher: {
       "@type": "Organization",
       name: schemaOrg.organization.name,
@@ -93,6 +129,22 @@ function buildFAQSchema(faq: { q: string; a: string }[]) {
       name: item.q,
       acceptedAnswer: { "@type": "Answer", text: item.a }
     }))
+  };
+}
+
+function buildHowToSchema(fm: Record<string, any>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: fm.title,
+    description: fm.description,
+    ...(fm.image?.src && { image: fm.image.src }),
+    step: fm.steps.map((step: { name: string; text: string }, i: number) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: step.name,
+      text: step.text,
+    })),
   };
 }
 

@@ -14,6 +14,9 @@ interface Props {
   modifiedTime?: Date;
   author?: string;
   tags?: string[];
+  ogTitle?: string;
+  ogDescription?: string;
+  category?: string;
 }
 
 const {
@@ -24,7 +27,10 @@ const {
   publishedTime,
   modifiedTime,
   author,
-  tags
+  tags,
+  ogTitle,
+  ogDescription,
+  category
 } = Astro.props;
 
 const orgSchema = {
@@ -62,6 +68,16 @@ const siteSchema = {
     modifiedTime={modifiedTime}
     author={author}
     tags={tags}
+    ogTitle={ogTitle}
+    ogDescription={ogDescription}
+    category={category}
+  />
+
+  <!-- Preload critical font -->
+  <link
+    rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    as="style"
   />
 
   <!-- Google Fonts -->
@@ -101,6 +117,13 @@ const siteSchema = {
   <slot name="head" />
 </head>
 <body>
+  <!-- Skip navigation for keyboard users -->
+  <a
+    href="#main-content"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-primary-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-medium"
+  >
+    Skip to content
+  </a>
   <slot />
 </body>
 </html>

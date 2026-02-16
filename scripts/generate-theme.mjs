@@ -25,10 +25,10 @@ for (const [size, value] of Object.entries(tokens.typography.sizes)) {
   css += `  --text-${size}: ${value};\n`;
 }
 
-// Spacing
-for (const [name, value] of Object.entries(tokens.spacing)) {
-  css += `  --spacing-${name}: ${value};\n`;
-}
+// Spacing - only base unit for Tailwind CSS 4 numeric scale (p-4 = 1rem, etc.)
+// Named tokens (xs, sm, md, lg, xl, 2xl, 3xl) are NOT output as --spacing-*
+// because they conflict with Tailwind's max-w-2xl, max-w-3xl etc. utilities
+css += `  --spacing: 0.25rem;\n`;
 
 // Radius
 for (const [name, value] of Object.entries(tokens.radius)) {

@@ -1,0 +1,6 @@
+---
+// Wrapper so <Image> in MDX resolves to MdxImage
+import MdxImage from './MdxImage.astro';
+---
+
+<MdxImage {...Astro.props}><slot /></MdxImage>

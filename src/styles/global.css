@@ -64,6 +64,40 @@ body {
 [data-animate-stagger].is-visible > *:nth-child(5) { transition-delay: 400ms; opacity: 1; transform: translateY(0); }
 [data-animate-stagger].is-visible > * { opacity: 1; transform: translateY(0); }
 
+/* Focus-visible styles for keyboard accessibility (WCAG 2.1 AA) */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-primary-500, #3b82f6);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+/* Touch target minimum 44x44px for interactive elements */
+@layer base {
+  button,
+  [role="button"],
+  input[type="submit"],
+  input[type="reset"],
+  input[type="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  button:has(svg:only-child),
+  [aria-label]:is(button) {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,

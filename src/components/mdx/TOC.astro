@@ -5,17 +5,32 @@ interface Heading {
   text: string;
 }
 
-interface Props {
-  headings: Heading[];
+interface RewriterHeading {
+  text: string;
+  href: string;
+  level: number;
 }
 
-const { headings = [] } = Astro.props;
+interface Props {
+  headings?: Heading[];
+  items?: RewriterHeading[];
+  title?: string;
+}
+
+const { headings: rawHeadings, items, title = 'Table of Contents' } = Astro.props;
+
+// Normalize: accept both items (rewriter) and headings (template)
+const headings = rawHeadings || (items?.map(item => ({
+  depth: item.level || 2,
+  slug: item.href?.replace(/^#/, '') || '',
+  text: item.text || '',
+})) || []);
 ---
 
 <div class="toc-container lg:sticky lg:top-24 border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 bg-white dark:bg-neutral-950">
   <div class="flex items-center justify-between mb-4 lg:mb-0">
     <h2 class="text-lg font-bold text-neutral-900 dark:text-white">
-      Table of Contents
+      {title}
     </h2>
     <button
       type="button"

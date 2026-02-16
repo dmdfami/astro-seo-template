@@ -26,10 +26,10 @@ const url = `${Astro.site}products/${product.id}`;
   image={product.data.image?.src}
   type="product"
 >
-  <SchemaRenderer contentType="product" frontmatter={product.data} url={url} />
+  <SchemaRenderer slot="schema" contentType="product" frontmatter={product.data} url={url} />
   <Header />
 
-  <main data-pagefind-body>
+  <main id="main-content" data-pagefind-body>
     <Container>
       <Breadcrumb
         items={[

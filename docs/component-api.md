@@ -2,10 +2,26 @@
 
 All 44 components are auto-imported via `astro-auto-import`. **No `import` statements needed in MDX.**
 
+## Dual-API Components (Template + Pipeline)
+
+Starting with Template Pipeline Alignment (Phase 5), **7 core content components support both legacy template API and modern rewriter pipeline API**. This enables backward compatibility while supporting new pipeline workflows.
+
+**Dual-API Components:** FAQ, CTA, CTABlock, Hero, AuthorBox, TOC, Callout
+
+**Key Principles:**
+- Use **template API** (original props) for direct MDX content
+- Use **pipeline API** (rewriter fields) for ai-content-rewriter pipeline integration
+- Both APIs work simultaneously in the same component
+- No breaking changes to existing content
+
+---
+
 ## Core Content Components
 
 ### Hero
 Full-width hero section with CTA buttons.
+
+**Template API:**
 ```mdx
 <Hero
   title="Your Title"
@@ -19,27 +35,60 @@ Full-width hero section with CTA buttons.
 />
 ```
 
+**Pipeline API:**
+```mdx
+<Hero
+  content={{ title: "...", subtitle: "...", ctaText: "...", ctaUrl: "..." }}
+  sectionId="hero"
+/>
+```
+
 ### AuthorBox
 Author bio with avatar and social links.
+
+**Template API:**
 ```mdx
 <AuthorBox name="John Doe" role="Content Writer" avatar="/images/john.jpg" />
 ```
 
+**Pipeline API:**
+```mdx
+<AuthorBox
+  content={{ name: "John Doe", jobTitle: "Content Writer", sameAs: [...], image: "..." }}
+/>
+```
+
 ### TOC
 Auto-generated table of contents. Place at top of article.
+
+**Template API:**
 ```mdx
 <TOC />
 ```
 
+**Pipeline API:**
+```mdx
+<TOC content={{ headings: [...] }} />
+```
+
 ### Callout
 Info/warning/success/error callout boxes.
+
+**Template API:**
 ```mdx
 <Callout type="info" title="Pro Tip">Your content here</Callout>
 <!-- type: info | warning | success | error -->
 ```
 
+**Pipeline API:**
+```mdx
+<Callout content={{ type: "info", title: "...", body: "..." }} />
+```
+
 ### CTA
 Unified call-to-action. Props-based or slot-based.
+
+**Template API:**
 ```mdx
 <!-- Props-based -->
 <CTA
@@ -51,14 +100,29 @@ Unified call-to-action. Props-based or slot-based.
 <CTA href="/contact" variant="primary">Request Quote</CTA>
 ```
 
+**Pipeline API:**
+```mdx
+<CTA content={{ primary: { text: "...", url: "..." }, secondary: {...} }} />
+```
+
 ### CTABlock
 Full-width CTA section with background.
+
+**Template API:**
 ```mdx
 <CTABlock
   title="Ready to start?"
   description="Contact us today"
   cta={{ primary: { text: "Get Quote", url: "/contact" } }}
   background="gradient"
+/>
+```
+
+**Pipeline API:**
+```mdx
+<CTABlock
+  content={{ title: "...", description: "...", cta: {...} }}
+  sectionId="cta"
 />
 ```
 
@@ -303,4 +367,82 @@ Team member showcase.
 <TeamGrid members={[
   { name: "Jane", role: "CEO", image: "/images/jane.jpg" }
 ]} />
+```
+
+## New Utility Wrappers (v1.1)
+
+### Badge
+Flexible badge component for tags, labels, and status indicators.
+```mdx
+<Badge variant="primary">New</Badge>
+<Badge variant="success">Active</Badge>
+```
+
+### BreadcrumbNav
+SEO-friendly breadcrumb navigation with Schema.org markup.
+```mdx
+<BreadcrumbNav />
+<!-- Auto-generates from current page hierarchy -->
+```
+
+### Image
+Optimized image wrapper with lazy loading and responsive variants.
+```mdx
+<Image
+  src="/images/photo.jpg"
+  alt="Description"
+  width={1200}
+  height={600}
+  loading="lazy"
+/>
+```
+
+## FAQ (Dual-API)
+Collapsible FAQ with Schema.org markup.
+
+**Template API:**
+```mdx
+<FAQ items={[
+  { q: "Question?", a: "Answer." },
+  { q: "Another?", a: "Another answer." }
+]} />
+```
+
+**Pipeline API:**
+```mdx
+<FAQ
+  content={{
+    mainEntity: [
+      { "@type": "Question", name: "...", acceptedAnswer: { "@type": "Answer", text: "..." } }
+    ]
+  }}
+/>
+```
+
+## Testimonial
+Customer testimonial with rating and metadata.
+
+**Template API:**
+```mdx
+<Testimonial
+  author="Jane Smith"
+  role="CEO, Acme Corp"
+  avatar="/images/jane.jpg"
+  rating={5}
+>
+  This product changed our business.
+</Testimonial>
+```
+
+**Pipeline API:**
+```mdx
+<Testimonial
+  content={{
+    author: "Jane Smith",
+    jobTitle: "CEO",
+    affiliation: "Acme Corp",
+    text: "...",
+    ratingValue: 5
+  }}
+/>
 ```

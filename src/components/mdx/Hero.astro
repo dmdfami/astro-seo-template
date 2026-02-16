@@ -6,23 +6,54 @@ import { Image } from 'astro:assets';
 interface Props {
   title: string;
   subtitle?: string;
-  image?: { src: string; alt: string };
+  badges?: string;
+  image?: { src: string; alt: string } | string;
+  backgroundImage?: { src: string; alt: string; opacity?: number };
   cta?: {
     primary?: { text: string; url: string };
     secondary?: { text: string; url: string };
   };
+  trustItems?: string[];
   variant?: 'default' | 'centered' | 'split';
   background?: 'gradient' | 'solid' | 'none';
+  // Rewriter flat CTA props
+  ctaText?: string;
+  ctaHref?: string;
+  ctaVariant?: 'primary' | 'secondary' | 'outline';
+  overlay?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+  align?: 'left' | 'center' | 'right';
 }
 
 const {
   title,
   subtitle,
+  badges,
   image,
+  backgroundImage,
   cta,
-  variant = 'default',
-  background = 'gradient'
+  trustItems,
+  variant,
+  background = 'gradient',
+  ctaText,
+  ctaHref,
+  align,
 } = Astro.props;
+
+// Normalize: flat CTA props -> nested cta object
+const resolvedCta = cta || (ctaText && ctaHref
+  ? { primary: { text: ctaText, url: ctaHref } }
+  : undefined);
+
+// Normalize: string image -> object
+const resolvedImage = typeof image === 'string'
+  ? { src: image, alt: title }
+  : image;
+
+// Map align to variant if variant not explicitly set
+const resolvedVariant = variant || (align === 'center' ? 'centered' : 'default');
+
+const bgOpacity = backgroundImage?.opacity ?? 0.3;
 
 const backgrounds = {
   gradient: 'bg-gradient-to-br from-primary-600 to-secondary-500 text-white',
@@ -31,37 +62,59 @@ const backgrounds = {
 };
 ---
 
-<section class={cn('py-20 lg:py-32', backgrounds[background])}>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    {variant === 'split' ? (
+<section class={cn('relative py-20 lg:py-32 overflow-hidden', backgrounds[background])}>
+  {/* Background image with configurable opacity */}
+  {backgroundImage && (
+    <div class="absolute inset-0 z-0">
+      <img
+        src={backgroundImage.src}
+        alt={backgroundImage.alt}
+        class="w-full h-full object-cover"
+        style={`opacity: ${bgOpacity}`}
+        loading="eager"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60" />
+    </div>
+  )}
+
+  <div class={cn('relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8', backgroundImage && 'text-white')}>
+    {resolvedVariant === 'split' ? (
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <div>
+          {badges && (
+            <p class="text-sm font-semibold uppercase tracking-wider text-primary-400 mb-4">{badges}</p>
+          )}
           <h1 class="text-4xl lg:text-6xl font-bold font-heading mb-6">
             {title}
           </h1>
           {subtitle && (
             <p class="text-xl lg:text-2xl opacity-90 mb-8">{subtitle}</p>
           )}
-          {cta && (
+          {resolvedCta && (
             <div class="flex flex-wrap gap-4">
-              {cta.primary && (
-                <Button href={cta.primary.url} variant="secondary" size="lg">
-                  {cta.primary.text}
+              {resolvedCta.primary && (
+                <Button href={resolvedCta.primary.url} variant="secondary" size="lg">
+                  {resolvedCta.primary.text}
                 </Button>
               )}
-              {cta.secondary && (
-                <Button href={cta.secondary.url} variant="outline" size="lg">
-                  {cta.secondary.text}
+              {resolvedCta.secondary && (
+                <Button href={resolvedCta.secondary.url} variant="outline" size="lg">
+                  {resolvedCta.secondary.text}
                 </Button>
               )}
             </div>
           )}
+          {trustItems && (
+            <div class="mt-6 flex flex-wrap items-center gap-6 text-sm opacity-80">
+              {trustItems.map((item) => <span>{item}</span>)}
+            </div>
+          )}
         </div>
-        {image && (
+        {resolvedImage && (
           <div>
             <Image
-              src={image.src}
-              alt={image.alt}
+              src={resolvedImage.src}
+              alt={resolvedImage.alt}
               width={600}
               height={400}
               class="rounded-xl shadow-2xl"
@@ -70,25 +123,33 @@ const backgrounds = {
         )}
       </div>
     ) : (
-      <div class={cn('max-w-4xl mx-auto', variant === 'centered' && 'text-center')}>
+      <div class={cn('max-w-4xl mx-auto', resolvedVariant === 'centered' && 'text-center')}>
+        {badges && (
+          <p class={cn('text-sm font-semibold uppercase tracking-wider mb-4', backgroundImage ? 'text-primary-300' : 'text-primary-400')}>{badges}</p>
+        )}
         <h1 class="text-4xl lg:text-6xl font-bold font-heading mb-6">
           {title}
         </h1>
         {subtitle && (
           <p class="text-xl lg:text-2xl opacity-90 mb-8">{subtitle}</p>
         )}
-        {cta && (
-          <div class={cn('flex flex-wrap gap-4', variant === 'centered' && 'justify-center')}>
-            {cta.primary && (
-              <Button href={cta.primary.url} variant="secondary" size="lg">
-                {cta.primary.text}
+        {resolvedCta && (
+          <div class={cn('flex flex-wrap gap-4', resolvedVariant === 'centered' && 'justify-center')}>
+            {resolvedCta.primary && (
+              <Button href={resolvedCta.primary.url} variant="secondary" size="lg">
+                {resolvedCta.primary.text}
               </Button>
             )}
-            {cta.secondary && (
-              <Button href={cta.secondary.url} variant="outline" size="lg">
-                {cta.secondary.text}
+            {resolvedCta.secondary && (
+              <Button href={resolvedCta.secondary.url} variant="outline" size="lg">
+                {resolvedCta.secondary.text}
               </Button>
             )}
+          </div>
+        )}
+        {trustItems && (
+          <div class={cn('mt-6 flex flex-wrap items-center gap-6 text-sm opacity-80', resolvedVariant === 'centered' && 'justify-center')}>
+            {trustItems.map((item) => <span>{item}</span>)}
           </div>
         )}
       </div>

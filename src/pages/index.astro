@@ -1,33 +1,26 @@
 ---
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/layout/Header.astro';
 import Footer from '@components/layout/Footer.astro';
-import Section from '@components/sections/Section.astro';
-import Container from '@components/sections/Container.astro';
-import Button from '@components/ui/Button.astro';
-import Badge from '@components/ui/Badge.astro';
+
+const [homepage] = await getCollection('pages', ({ data, id }) =>
+  !data.draft && data.contentType === 'homepage'
+);
+
+if (!homepage) {
+  throw new Error('Homepage MDX file not found. Create src/content/pages/home.mdx with contentType: "homepage"');
+}
+
+const { Content } = await render(homepage);
 ---
 
-<BaseLayout title="Home" description="Welcome to the template">
+<BaseLayout title={homepage.data.title} description={homepage.data.description}>
   <Header />
 
-  <Section padding="xl" background="gradient">
-    <Container>
-      <div class="text-center" data-animate="fade-up">
-        <Badge variant="info">Phase 2 Complete</Badge>
-        <h1 class="mt-6 text-6xl font-heading font-bold">
-          Design System Ready
-        </h1>
-        <p class="mt-4 text-xl opacity-90 max-w-2xl mx-auto">
-          UI components, layout system, dark mode, and view transitions implemented.
-        </p>
-        <div class="mt-8 flex items-center justify-center gap-4">
-          <Button variant="secondary" size="lg">Get Started</Button>
-          <Button variant="outline" size="lg" class="border-white text-white hover:bg-white/10">Learn More</Button>
-        </div>
-      </div>
-    </Container>
-  </Section>
+  <main id="main-content" data-pagefind-body>
+    <Content />
+  </main>
 
   <Footer />
 </BaseLayout>
