@@ -17,6 +17,57 @@
 ✗ src/lib/formatDate.ts
 ```
 
+## Layout Registry Pattern
+
+### Central Registry (Single Source of Truth)
+
+All layout configurations are defined in `src/lib/layout-registry.ts`:
+
+```typescript
+export interface LayoutConfig {
+  pattern: 'fullwidth' | 'hybrid' | 'split' | 'prose';
+  container: 'none' | 'md' | 'lg' | 'xl';
+  proseWrapper: boolean;
+  h1Auto: boolean;
+  breadcrumb: boolean;
+}
+
+export const LAYOUT_REGISTRY: Record<string, LayoutConfig> = {
+  homepage: { pattern: 'hybrid', container: 'none', ... },
+  blog: { pattern: 'prose', container: 'md', ... },
+  // 12 content types total
+};
+```
+
+### Router Integration
+
+Universal router files (`src/pages/[slug].astro`, `src/pages/products/[slug].astro`) use `getLayout(contentType)`:
+
+```astro
+---
+import { getLayout } from '@/lib/layout-registry.ts';
+
+const layout = getLayout(contentType);
+const { pattern, container, proseWrapper, h1Auto, breadcrumb } = layout;
+---
+
+<section class={container !== 'none' ? `max-w-${container}` : ''}>
+  {breadcrumb && <Breadcrumb />}
+  {h1Auto && !hasH1 && <h1>{title}</h1>}
+  <div class={proseWrapper ? 'prose' : ''}>
+    <slot />
+  </div>
+</section>
+```
+
+### Contract Testing
+
+Run `npm run test:layout` to verify all 12 content types have valid configs. Test suite checks:
+- All content types exist in registry
+- All patterns and containers are valid
+- All required config fields are present
+- No stale or incomplete entries
+
 ## Astro 5 Patterns
 
 ### Component Structure

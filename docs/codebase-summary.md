@@ -40,6 +40,7 @@ astro-seo-template/
 │   │   ├── sitemap.xml.ts      # Auto-generated sitemap
 │   │   └── rss.xml.ts          # Blog RSS feed
 │   ├── lib/
+│   │   ├── layout-registry.ts  # Central layout registry (12 types → 4 patterns)
 │   │   ├── site-config.ts      # Parse site-config.json
 │   │   ├── schema-builder.ts   # Build Schema.org JSON-LD
 │   │   └── formatting.ts       # Date, slug utilities
@@ -49,6 +50,8 @@ astro-seo-template/
 ├── scripts/
 │   ├── generate-theme.mjs      # Compile design-tokens.json → theme.css
 │   └── validate-schema.mjs     # Validate Schema.org JSON
+├── tests/
+│   └── test-layout-registry.cjs # 24 contract checks for layout registry
 ├── site-config.json            # Site identity (name, URL, nav, contact)
 ├── schema-org.json             # Schema.org organization, author data
 ├── design-tokens.json          # Colors, fonts, spacing, shadows
@@ -217,8 +220,11 @@ Each client gets independent repository fork:
 - `npm run dev`: Start dev server with hot reload
 - `npm run build`: Compile Astro + generate theme + validate schema
 - `npm run preview`: Preview production build locally
+- `npm run test:layout`: Run 24 layout registry contract checks
 
 **Prebuild Hook:** `scripts/generate-theme.mjs` automatically runs to compile `design-tokens.json` → `theme.css`
+
+**Layout Registry:** Central source of truth in `src/lib/layout-registry.ts` maps 12 content types to 4 rendering patterns. Used by universal routers to ensure deterministic layout matching.
 
 ## Key Libraries
 

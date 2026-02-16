@@ -138,7 +138,55 @@ Client-side interactivity only where needed (client:load)
 | Product & Visual | 12 | Gallery, BeforeAfter, SpecTable, Counter | Server-side (lazy-load images) |
 | Social & Trust | 7 | ClientLogos, TrustBar, Timeline, Forms | Server-side + optional JS |
 
-### 4. Styling Layer
+### 4. Layout Registry
+
+**Architecture:**
+```
+src/lib/layout-registry.ts (source of truth)
+    ↓
+LAYOUT_REGISTRY: 12 content types → 4 patterns
+    ↓
+Pattern: fullwidth, hybrid, split, prose
+Config fields: container, proseWrapper, h1Auto, breadcrumb
+    ↓
+Used by [slug].astro and products/[slug].astro
+    ↓
+Deterministic layout matching per content type
+```
+
+**Content Type Mapping:**
+
+| Content Type | Pattern | Container | Use Case |
+|--------------|---------|-----------|----------|
+| homepage | hybrid | none | Hero + sections |
+| landing | fullwidth | none | Conversion funnel |
+| gallery | fullwidth | none | Image showcase with breadcrumb |
+| video-hub | fullwidth | none | Video gallery with breadcrumb |
+| product | split | lg | Spec table + prose with h1 |
+| blog | prose | md | Article with h1 + breadcrumb |
+| generic | prose | md | Static page with h1 + breadcrumb |
+| about | prose | md | Company info with h1 + breadcrumb |
+| contact | prose | md | Contact form with h1 + breadcrumb |
+| product-list | prose | md | Catalog with h1 + breadcrumb |
+| blog-list | prose | md | Archive with h1 + breadcrumb |
+| reviews | prose | md | Testimonials with h1 + breadcrumb |
+
+**Config Fields:**
+- `pattern`: Visual layout (fullwidth = no max-width, prose = readable measure, split = sidebar, hybrid = hero + sections)
+- `container`: Max-width constraint ('none' | 'md' | 'lg' | 'xl')
+- `proseWrapper`: Apply `.prose` utilities to content
+- `h1Auto`: Auto-render frontmatter title as `<h1>` if missing
+- `breadcrumb`: Render breadcrumb navigation above content
+
+**Integration:**
+```typescript
+import { getLayout, isFullWidth } from '@/lib/layout-registry.ts';
+
+const layout = getLayout(contentType);
+const isFull = isFullWidth(contentType);
+```
+
+### 5. Styling Layer
 
 **Design Token Compilation Pipeline:**
 ```
@@ -175,7 +223,7 @@ Compiled CSS bundled in dist/
 }
 ```
 
-### 5. SEO Layer (3-Tier Schema.org)
+### 6. SEO Layer (3-Tier Schema.org)
 
 **Tier 1: Organization (Site-wide)**
 ```json
@@ -216,7 +264,7 @@ Frontmatter ──> schema-builder.ts
             ──> Validated by validate-schema.mjs
 ```
 
-### 6. Search Infrastructure (Pagefind)
+### 7. Search Infrastructure (Pagefind)
 
 **Build-Time:**
 ```
